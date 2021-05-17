@@ -1,0 +1,9 @@
+face_recognition
+flask
+flask_ngrok
+pymongo
+pymongo[srv]
+tensorflow-cpu
+numpy
+pillow
+requests
