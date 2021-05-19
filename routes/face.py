@@ -181,24 +181,24 @@ def check(roomID: str):
 def face_feedback():
     verify(request.args)
 
-    if 'image' not in request.form:
+    if 'image' not in request.json:
         raise ErrorAPI(400, 'missing "image"')
-    if 'collection' not in request.form:
+    if 'collection' not in request.json:
         raise ErrorAPI(400, 'missing "collection"')
-    if 'roomid' not in request.form:
+    if 'roomid' not in request.json:
         raise ErrorAPI(400, 'missing "roomid"')
-    if 'usertaken' not in request.form:
+    if 'usertaken' not in request.json:
         raise ErrorAPI(400, 'missing "usertaken"')
-    if 'userbetaken' not in request.form:
+    if 'userbetaken' not in request.json:
         raise ErrorAPI(400, 'missing "userbetaken"')
 
     description = 'Mistaken in face recognition'
-    if 'description' in request.form:
-        description = request.form['description']
+    if 'description' in request.json:
+        description = request.json['description']
 
     res = face.exist(
-        request.form['collection'],
-        request.form['usertaken']
+        request.json['collection'],
+        request.json['usertaken']
     )
     if not res:
         raise ErrorAPI(500, 'something wrong')
@@ -209,11 +209,11 @@ def face_feedback():
         )
 
     if not moodle.create_feedback(
-            roomid=request.form['roomid'],
-            usertaken=request.form['usertaken'],
-            userbetaken=request.form['userbetaken'],
+            roomid=request.json['roomid'],
+            usertaken=request.json['usertaken'],
+            userbetaken=request.json['userbetaken'],
             description=description,
-            image=request.form['image']
+            image=request.json['image']
     ):
         raise ErrorAPI(500, 'failed')
 
