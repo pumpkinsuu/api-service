@@ -1,9 +1,7 @@
-face_recognition
 flask
-flask_ngrok
+flask_cors
 pymongo
 pymongo[srv]
-tensorflow-cpu
 numpy
 pillow
 requests
