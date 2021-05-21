@@ -1,5 +1,6 @@
-[2021-05-21 13:01:57] — <werkzeug>:  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
-[2021-05-21 13:01:59] — <werkzeug>: 127.0.0.1 - - [21/May/2021 13:01:59] "[37mGET /api/campus HTTP/1.1[0m" 200 -
-[2021-05-21 13:01:59] — <werkzeug>: 127.0.0.1 - - [21/May/2021 13:01:59] "[37mGET /favicon.ico HTTP/1.1[0m" 200 -
-[2021-05-21 13:02:22] — <werkzeug>: 127.0.0.1 - - [21/May/2021 13:02:22] "[37mGET /api/campus?token=api_key HTTP/1.1[0m" 200 -
-[2021-05-21 13:02:23] — <werkzeug>: 127.0.0.1 - - [21/May/2021 13:02:23] "[37mGET /favicon.ico HTTP/1.1[0m" 200 -
+[2021-05-21 13:24:14] — <werkzeug>:  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+[2021-05-21 13:24:22] — <werkzeug>: 127.0.0.1 - - [21/May/2021 13:24:22] "[37mGET / HTTP/1.1[0m" 200 -
+[2021-05-21 13:24:22] — <werkzeug>: 127.0.0.1 - - [21/May/2021 13:24:22] "[37mGET /favicon.ico HTTP/1.1[0m" 200 -
+[2021-05-21 13:24:38] — <root>: invalidlogin
+NoneType: None
+[2021-05-21 13:24:38] — <werkzeug>: 127.0.0.1 - - [21/May/2021 13:24:38] "[37mPOST /api/login HTTP/1.1[0m" 200 -
