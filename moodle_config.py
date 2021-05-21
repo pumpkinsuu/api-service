@@ -1,7 +1,7 @@
 # Moodle url
-URL = 'http://localhost'
+URL = 'http://52.139.218.246/moodle'
 # Webservice token
-WSTOKEN = '56e75b2279ae442cc8a38aa3eb59f3a8'
+WSTOKEN = '498ea1118732843a7546fb4a1920c0d3'
 # Webservice function
 USER_INFO = 'local_webservices_get_roles'
 TOKEN_INFO = 'core_webservice_get_site_info'
