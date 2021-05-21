@@ -2,7 +2,7 @@ import requests as req
 
 import config
 
-from utilities import logger
+from utilities import logger, ErrorAPI
 log = logger('face')
 
 
@@ -13,7 +13,7 @@ def users(collection: str):
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
-        return {}
+        raise ErrorAPI(500, 'something wrong')
 
 
 def exist(collection: str, userID: str):
@@ -23,7 +23,7 @@ def exist(collection: str, userID: str):
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
-        return {}
+        raise ErrorAPI(500, 'something wrong')
 
 
 def create(collection: str, user: dict):
@@ -33,7 +33,7 @@ def create(collection: str, user: dict):
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
-        return {}
+        raise ErrorAPI(500, 'something wrong')
 
 
 def update(collection: str, user: dict):
@@ -43,7 +43,7 @@ def update(collection: str, user: dict):
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
-        return {}
+        raise ErrorAPI(500, 'something wrong')
 
 
 def remove(collection: str, userID):
@@ -53,7 +53,7 @@ def remove(collection: str, userID):
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
-        return {}
+        raise ErrorAPI(500, 'something wrong')
 
 
 def find(collection: str, images: list):
@@ -63,7 +63,7 @@ def find(collection: str, images: list):
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
-        return {}
+        raise ErrorAPI(500, 'something wrong')
 
 
 def count(collection: str):
@@ -73,7 +73,7 @@ def count(collection: str):
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
-        return {}
+        raise ErrorAPI(500, 'something wrong')
 
 
 def rename(collection: str, name: str):
@@ -84,7 +84,7 @@ def rename(collection: str, name: str):
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
-        return {}
+        raise ErrorAPI(500, 'something wrong')
 
 
 def drop(collection: str):
@@ -94,4 +94,4 @@ def drop(collection: str):
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
-        return {}
+        raise ErrorAPI(500, 'something wrong')

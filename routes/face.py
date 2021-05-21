@@ -14,8 +14,6 @@ def get_users(collection: str):
     verify(request.args)
 
     res = face.users(collection)
-    if not res:
-        raise ErrorAPI(500, 'something wrong')
     if 'error' in res:
         raise ErrorAPI(
             res['error']['code'],
@@ -35,8 +33,6 @@ def rename_collection(collection: str):
         collection,
         request.json['name']
     )
-    if not res:
-        raise ErrorAPI(500, 'something wrong')
     if 'error' in res:
         raise ErrorAPI(
             res['error']['code'],
@@ -51,8 +47,6 @@ def drop_collection(collection: str):
     verify(request.args, admin=True)
 
     res = face.drop(collection)
-    if not res:
-        raise ErrorAPI(500, 'something wrong')
     if 'error' in res:
         raise ErrorAPI(
             res['error']['code'],
@@ -67,8 +61,6 @@ def get_user(collection: str, userID: str):
     verify(request.args)
 
     res = face.exist(collection, userID)
-    if not res:
-        raise ErrorAPI(500, 'something wrong')
     if 'error' in res:
         raise ErrorAPI(
             res['error']['code'],
@@ -99,8 +91,6 @@ def update_user(collection: str, userID: str):
         raise ErrorAPI(404, 'user not found')
 
     res = face.exist(collection, userID)
-    if not res:
-        raise ErrorAPI(500, 'something wrong')
 
     user = {
         'id': userID,
@@ -118,8 +108,6 @@ def update_user(collection: str, userID: str):
         message = 'success'
         res = face.update(collection, user)
 
-    if not res:
-        raise ErrorAPI(500, 'something wrong')
     if 'error' in res:
         raise ErrorAPI(
             res['error']['code'],
@@ -133,8 +121,6 @@ def remove(collection: str, userID: str):
     verify(request.args, admin=True)
 
     res = face.remove(collection, userID)
-    if not res:
-        raise ErrorAPI(500, 'something wrong')
     if 'error' in res:
         raise ErrorAPI(
             res['error']['code'],
@@ -156,6 +142,11 @@ def check(roomID: str):
         request.json['collection'],
         request.json.getlist('images')
     )
+    if 'error' in userIDs:
+        raise ErrorAPI(
+            userIDs['error']['code'],
+            userIDs['error']['message']
+        )
 
     users = []
     for userID in userIDs:
@@ -200,8 +191,6 @@ def face_feedback():
         request.json['collection'],
         request.json['usertaken']
     )
-    if not res:
-        raise ErrorAPI(500, 'something wrong')
     if 'error' in res:
         raise ErrorAPI(
             res['error']['code'],
