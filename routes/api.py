@@ -8,6 +8,9 @@ from config import API_KEY
 
 
 def verify(args, admin=False):
+    if 'token' not in args:
+        ErrorAPI(400, 'missing "token"')
+
     if args['token'] == API_KEY:
         return
 
