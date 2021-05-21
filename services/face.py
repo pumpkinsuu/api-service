@@ -59,7 +59,10 @@ def remove(collection: str, userID):
 def find(collection: str, images: list):
     try:
         url = f'{config.FACE_URL}/{collection}/find'
-        r = req.post(url, data=images)
+        data = {
+            'images': images
+        }
+        r = req.post(url, data=data)
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)

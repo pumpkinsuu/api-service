@@ -140,7 +140,7 @@ def check(roomID: str):
 
     userIDs = face.find(
         request.json['collection'],
-        request.json.getlist('images')
+        request.json['images']
     )
     if not userIDs:
         raise ErrorAPI(400, 'collection empty')
