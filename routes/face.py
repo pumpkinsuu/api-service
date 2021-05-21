@@ -142,6 +142,9 @@ def check(roomID: str):
         request.json['collection'],
         request.json.getlist('images')
     )
+    if not userIDs:
+        raise ErrorAPI(400, 'collection empty')
+
     if 'error' in userIDs:
         raise ErrorAPI(
             userIDs['error']['code'],
