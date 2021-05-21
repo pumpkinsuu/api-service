@@ -26,14 +26,11 @@ def root():
     return response(200, 'ok')
 
 
-def main():
-    CORS(face_bp)
-    CORS(api_bp)
-
-    app.register_blueprint(face_bp, url_prefix='/face')
-    app.register_blueprint(api_bp, url_prefix='/api')
-    app.run(host=HOST, port=PORT)
+CORS(face_bp)
+CORS(api_bp)
+app.register_blueprint(face_bp, url_prefix='/face')
+app.register_blueprint(api_bp, url_prefix='/api')
 
 
 if __name__ == '__main__':
-    main()
+    app.run(host=HOST, port=PORT)
