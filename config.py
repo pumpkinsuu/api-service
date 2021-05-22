@@ -1,6 +1,6 @@
 # Server
 HOST = '0.0.0.0'
 PORT = 5000
-API_KEY = 'api_key'
+API_KEY = 'secret_key'
 # Face service
-FACE_URL = 'http://0.0.0.0:5001'
+FACE_URL = 'http://localhost:5001'

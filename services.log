@@ -1,36 +1,24 @@
-[2021-05-21 14:53:28] — <werkzeug>:  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
-[2021-05-21 14:53:41] — <root>: HTTPConnectionPool(host='0.0.0.0', port=5001): Max retries exceeded with url: /main/find (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000169906ABE50>: Failed to establish a new connection: [WinError 10049] The requested address is not valid in its context'))
-Traceback (most recent call last):
-  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connection.py", line 159, in _new_conn
-    conn = connection.create_connection(
-  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\util\connection.py", line 84, in create_connection
-    raise err
-  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\util\connection.py", line 74, in create_connection
-    sock.connect(sa)
-OSError: [WinError 10049] The requested address is not valid in its context
-
-During handling of the above exception, another exception occurred:
-
+[2021-05-21 14:58:35] — <werkzeug>:  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+[2021-05-21 14:58:45] — <werkzeug>: 127.0.0.1 - - [21/May/2021 14:58:45] "[37mGET /face/test?token=api_key HTTP/1.1[0m" 200 -
+[2021-05-21 14:58:59] — <werkzeug>: 127.0.0.1 - - [21/May/2021 14:58:59] "[37mPOST /face/checkin/227?token=api_key HTTP/1.1[0m" 200 -
+[2021-05-21 15:00:22] — <root>: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
 Traceback (most recent call last):
   File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 670, in urlopen
     httplib_response = self._make_request(
-  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 392, in _make_request
-    conn.request(method, url, **httplib_request_kw)
-  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 1255, in request
-    self._send_request(method, url, body, headers, encode_chunked)
-  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 1301, in _send_request
-    self.endheaders(body, encode_chunked=encode_chunked)
-  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 1250, in endheaders
-    self._send_output(message_body, encode_chunked=encode_chunked)
-  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 1010, in _send_output
-    self.send(msg)
-  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 950, in send
-    self.connect()
-  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connection.py", line 187, in connect
-    conn = self._new_conn()
-  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connection.py", line 171, in _new_conn
-    raise NewConnectionError(
-urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x00000169906ABE50>: Failed to establish a new connection: [WinError 10049] The requested address is not valid in its context
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 426, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 421, in _make_request
+    httplib_response = conn.getresponse()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 1347, in getresponse
+    response.begin()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 307, in begin
+    version, status, reason = self._read_status()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 268, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Users\pumpk\anaconda3\lib\socket.py", line 669, in readinto
+    return self._sock.recv_into(b)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
 
 During handling of the above exception, another exception occurred:
 
@@ -39,9 +27,26 @@ Traceback (most recent call last):
     resp = conn.urlopen(
   File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 726, in urlopen
     retries = retries.increment(
-  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\util\retry.py", line 446, in increment
-    raise MaxRetryError(_pool, url, error or ResponseError(cause))
-urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='0.0.0.0', port=5001): Max retries exceeded with url: /main/find (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000169906ABE50>: Failed to establish a new connection: [WinError 10049] The requested address is not valid in its context'))
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\util\retry.py", line 410, in increment
+    raise six.reraise(type(error), error, _stacktrace)
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\packages\six.py", line 734, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 670, in urlopen
+    httplib_response = self._make_request(
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 426, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 421, in _make_request
+    httplib_response = conn.getresponse()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 1347, in getresponse
+    response.begin()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 307, in begin
+    version, status, reason = self._read_status()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 268, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Users\pumpk\anaconda3\lib\socket.py", line 669, in readinto
+    return self._sock.recv_into(b)
+urllib3.exceptions.ProtocolError: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
 
 During handling of the above exception, another exception occurred:
 
@@ -56,7 +61,71 @@ Traceback (most recent call last):
     resp = self.send(prep, **send_kwargs)
   File "C:\Users\pumpk\anaconda3\lib\site-packages\requests\sessions.py", line 643, in send
     r = adapter.send(request, **kwargs)
-  File "C:\Users\pumpk\anaconda3\lib\site-packages\requests\adapters.py", line 516, in send
-    raise ConnectionError(e, request=request)
-requests.exceptions.ConnectionError: HTTPConnectionPool(host='0.0.0.0', port=5001): Max retries exceeded with url: /main/find (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000169906ABE50>: Failed to establish a new connection: [WinError 10049] The requested address is not valid in its context'))
-[2021-05-21 14:53:41] — <werkzeug>: 127.0.0.1 - - [21/May/2021 14:53:41] "[37mPOST /face/checkin/227?token=api_key HTTP/1.1[0m" 200 -
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\requests\adapters.py", line 498, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[2021-05-21 15:00:22] — <werkzeug>: 127.0.0.1 - - [21/May/2021 15:00:22] "[37mPOST /face/checkin/227?token=api_key HTTP/1.1[0m" 200 -
+[2021-05-21 15:01:38] — <root>: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+Traceback (most recent call last):
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 670, in urlopen
+    httplib_response = self._make_request(
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 426, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 421, in _make_request
+    httplib_response = conn.getresponse()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 1347, in getresponse
+    response.begin()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 307, in begin
+    version, status, reason = self._read_status()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 268, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Users\pumpk\anaconda3\lib\socket.py", line 669, in readinto
+    return self._sock.recv_into(b)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\requests\adapters.py", line 439, in send
+    resp = conn.urlopen(
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 726, in urlopen
+    retries = retries.increment(
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\util\retry.py", line 410, in increment
+    raise six.reraise(type(error), error, _stacktrace)
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\packages\six.py", line 734, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 670, in urlopen
+    httplib_response = self._make_request(
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 426, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\urllib3\connectionpool.py", line 421, in _make_request
+    httplib_response = conn.getresponse()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 1347, in getresponse
+    response.begin()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 307, in begin
+    version, status, reason = self._read_status()
+  File "C:\Users\pumpk\anaconda3\lib\http\client.py", line 268, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Users\pumpk\anaconda3\lib\socket.py", line 669, in readinto
+    return self._sock.recv_into(b)
+urllib3.exceptions.ProtocolError: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\pumpk\Documents\py\api-service\services\face.py", line 65, in find
+    r = req.post(url, data=data)
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\requests\api.py", line 119, in post
+    return request('post', url, data=data, json=json, **kwargs)
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\requests\api.py", line 61, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\requests\sessions.py", line 530, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\requests\sessions.py", line 643, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\pumpk\anaconda3\lib\site-packages\requests\adapters.py", line 498, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[2021-05-21 15:01:38] — <werkzeug>: 127.0.0.1 - - [21/May/2021 15:01:38] "[37mPOST /face/checkin/227?token=api_key HTTP/1.1[0m" 200 -
