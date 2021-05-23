@@ -69,7 +69,7 @@ def checkin(roomid, studentid, status):
         'studentid': studentid,
         'statusid': status
     }
-    r = req.get(url, params=params)
+    r = req.post(url, params=params)
     return bool(res(r))
 
 
@@ -178,7 +178,7 @@ def create_feedback(roomid,
         'description': description,
         'image': image
     }
-    r = req.get(url, params=params)
+    r = req.post(url, params=params)
     return res(r)
 
 
