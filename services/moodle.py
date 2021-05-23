@@ -184,7 +184,7 @@ def create_feedback(roomid,
 
 def create_image(studentid, image_front, image_left, image_right):
     url = f'{moodle.URL}/webservice/rest/server.php'
-    params = {
+    data = {
         'moodlewsrestformat': 'json',
         'wstoken': moodle.WSTOKEN,
         'wsfunction': moodle.CREATE_IMAGE,
@@ -193,7 +193,7 @@ def create_image(studentid, image_front, image_left, image_right):
         'image_left': image_left,
         'image_right': image_right
     }
-    r = req.post(url, params=params)
+    r = req.post(url, data=data)
     return res(r)
 
 
