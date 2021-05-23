@@ -99,7 +99,7 @@ def update_user(collection: str, userID: str):
         'right': request.form['right']
     }
 
-    if 'error' not in res:
+    if 'error' in res:
         code = 201
         message = 'created'
         res = face.create(collection, user)
