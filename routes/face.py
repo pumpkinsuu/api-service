@@ -115,6 +115,18 @@ def update_user(collection: str, userID: str):
                 res['error']['code'],
                 res['error']['message']
             )
+        if code == 200 or code == 201:
+            res = moodle.create_image(
+                user['id'],
+                user['front'],
+                user['left'],
+                user['right']
+            )
+            if not res:
+                code = 500
+                message = 'failed to create image'
+                face.remove(collection, userID)
+
         return response(code, message)
 
     except ErrorAPI as err:
