@@ -54,12 +54,12 @@ def login():
 def get_student_log():
     verify(request.args)
 
-    if 'studentid' not in request.args:
-        raise ErrorAPI(400, 'missing "studentid"')
+    if 'username' not in request.args:
+        raise ErrorAPI(400, 'missing "username"')
     if 'courseid' not in request.args:
         raise ErrorAPI(400, 'missing "courseid"')
 
-    reports = moodle.student_log(request.args['studentid'], request.args['courseid'])
+    reports = moodle.student_log(request.args['username'], request.args['courseid'])
     if not reports:
         raise ErrorAPI(404, 'student\'s report not found')
 
@@ -145,7 +145,7 @@ def manual_check(roomID):
         raise ErrorAPI(400, 'missing "students"')
 
     for student in request.json['students']:
-        if not moodle.checkin(roomID, student['id'], student['status']):
+        if not moodle.checkin(roomID, student['username'], student['status']):
             raise ErrorAPI(400, 'failed to checkin')
 
     return response(200, 'success')

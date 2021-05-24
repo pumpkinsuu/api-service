@@ -178,9 +178,6 @@ def check(roomID: str):
                 users.append({'status': 0})
 
             user = moodle.user_info(userID)
-            data = moodle.get_image(userID)
-            if data:
-                user['avatar'] = data['image_front']
 
             if moodle.checkin(roomID, userID, 1):
                 user['status'] = 1

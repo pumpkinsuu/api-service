@@ -58,15 +58,14 @@ def login(username, password):
     return res(r)
 
 
-def checkin(roomid, studentid, status):
-    studentid = user_info(studentid)['id']
+def checkin(roomid, username, status):
     url = f'{moodle.URL}/webservice/rest/server.php'
     params = {
         'moodlewsrestformat': 'json',
         'wstoken': moodle.WSTOKEN,
         'wsfunction': moodle.UPDATE_LOG,
         'roomid': roomid,
-        'studentid': studentid,
+        'username': username,
         'statusid': status
     }
     r = req.post(url, params=params)
@@ -110,13 +109,13 @@ def reports(attendanceid):
     return res(r)
 
 
-def student_log(studentid, courseid):
+def student_log(username, courseid):
     url = f'{moodle.URL}/webservice/rest/server.php'
     params = {
         'moodlewsrestformat': 'json',
         'wstoken': moodle.WSTOKEN,
         'wsfunction': moodle.GET_STUDENT_LOG,
-        'studentid': studentid,
+        'username': username,
         'courseid': courseid
     }
     r = req.get(url, params=params)
@@ -182,13 +181,13 @@ def create_feedback(roomid,
     return res(r)
 
 
-def create_image(studentid, image_front, image_left, image_right):
+def create_image(username, image_front, image_left, image_right):
     url = f'{moodle.URL}/webservice/rest/server.php'
     data = {
         'moodlewsrestformat': 'json',
         'wstoken': moodle.WSTOKEN,
         'wsfunction': moodle.CREATE_IMAGE,
-        'studentid': studentid,
+        'username': username,
         'image_front': image_front,
         'image_left': image_left,
         'image_right': image_right
@@ -197,13 +196,13 @@ def create_image(studentid, image_front, image_left, image_right):
     return res(r)
 
 
-def get_image(studentid):
+def get_image(username):
     url = f'{moodle.URL}/webservice/rest/server.php'
     params = {
         'moodlewsrestformat': 'json',
         'wstoken': moodle.WSTOKEN,
         'wsfunction': moodle.GET_IMAGE,
-        'studentid': studentid
+        'username': username
     }
     r = req.post(url, params=params)
     return res(r)
