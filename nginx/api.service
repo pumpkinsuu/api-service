@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve api service
+After=network.target
+
+[Service]
+User=pumpk
+Group=www-data
+WorkingDirectory=/home/pumpk/api-service
+Environment="PATH=/home/pumpk/env/bin"
+ExecStart=/home/pumpk/env/bin/gunicorn --workers 2 --bind unix:api-service.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target

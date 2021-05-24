@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    server_name 20.198.250.152;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/pumpk/api-service/api-service.sock;
+    }
+}

@@ -3,5 +3,3 @@ flask_cors
 pymongo
 pymongo[srv]
 numpy
-pillow
-requests

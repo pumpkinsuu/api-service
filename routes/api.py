@@ -160,12 +160,6 @@ def get_student(username):
     if not student:
         raise ErrorAPI(404, 'username not found')
 
-    data = moodle.get_image(username)
-    if data:
-        student['front'] = data['image_front']
-        student['left'] = data['image_left']
-        student['right'] = data['image_right']
-
     return response(200, 'success', student)
 
 
