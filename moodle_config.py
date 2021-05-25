@@ -1,7 +1,7 @@
 # Moodle url
-URL = 'http://52.139.218.246/moodle'
+URL = 'https://courses.fit.hcmus.edu.vn/moodletest'
 # Webservice token
-WSTOKEN = '498ea1118732843a7546fb4a1920c0d3'
+WSTOKEN = '73661670056f61405a0c5ee6a95375f1'
 # Webservice function
 USER_INFO = 'local_webservices_get_roles'
 TOKEN_INFO = 'core_webservice_get_site_info'

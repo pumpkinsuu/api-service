@@ -18,14 +18,14 @@ def verify(args, admin=False):
     if not result:
         raise ErrorAPI(401, 'unauthorized request')
 
-    if result['userissiteadmin']:
-        return
-
     role = DEF_ROLE
     if admin:
         role = ADMIN_ROLE
 
     user = moodle.user_info(result['username'])
+    if user['isadmin']:
+        return
+
     if not user or user['roleid'] not in role:
         raise ErrorAPI(401, 'no permission')
 
