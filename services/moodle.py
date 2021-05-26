@@ -205,4 +205,7 @@ def get_image(username):
         'username': username
     }
     r = req.post(url, params=params)
-    return res(r)
+    data = res(r)
+    if data:
+        return data[0]
+    return {}
