@@ -63,11 +63,10 @@ def checkin(roomid, username):
     params = {
         'moodlewsrestformat': 'json',
         'wstoken': moodle.WSTOKEN,
-        'wsfunction': moodle.UPDATE_LOG,
+        'wsfunction': moodle.CHECKIN,
         'roomid': roomid,
         'username': username
     }
-    log.info(params)
     r = req.post(url, params=params)
     return bool(res(r))
 
