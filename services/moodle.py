@@ -67,6 +67,7 @@ def checkin(roomid, username):
         'roomid': roomid,
         'username': username
     }
+    log.info(params)
     r = req.post(url, params=params)
     return bool(res(r))
 
