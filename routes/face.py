@@ -68,11 +68,12 @@ def get_user(collection: str, userID: str):
             res['error']['message']
         )
 
+    user = {}
     data = moodle.get_image(userID)
     if data:
-        res['front'] = data['image_front']
-        res['left'] = data['image_left']
-        res['right'] = data['image_right']
+        user['front'] = data['image_front']
+        user['left'] = data['image_left']
+        user['right'] = data['image_right']
 
     return response(200, 'success', res)
 
