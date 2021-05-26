@@ -187,6 +187,10 @@ def check(roomID: str):
             else:
                 user['status'] = 3
 
+            data = moodle.get_image(userID)
+            if data:
+                user['avatar'] = data['image_front']
+
             users.append(user)
 
         return response(200, 'success', users)
