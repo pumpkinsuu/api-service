@@ -145,7 +145,7 @@ def manual_check(roomID):
         raise ErrorAPI(400, 'missing "students"')
 
     for student in request.json['students']:
-        if not moodle.checkin(roomID, student['username'], student['status']):
+        if not moodle.checkin(roomID, student['username']):
             raise ErrorAPI(400, 'failed to checkin')
 
     return response(200, 'success')

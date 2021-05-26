@@ -58,15 +58,14 @@ def login(username, password):
     return res(r)
 
 
-def checkin(roomid, username, status):
+def checkin(roomid, username):
     url = f'{moodle.URL}/webservice/rest/server.php'
     params = {
         'moodlewsrestformat': 'json',
         'wstoken': moodle.WSTOKEN,
         'wsfunction': moodle.UPDATE_LOG,
         'roomid': roomid,
-        'username': username,
-        'statusid': status
+        'username': username
     }
     r = req.post(url, params=params)
     return bool(res(r))
