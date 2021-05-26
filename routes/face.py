@@ -70,6 +70,7 @@ def get_user(collection: str, userID: str):
 
     user = {}
     data = moodle.get_image(userID)
+    log.info(data)
     if data:
         user['front'] = data['image_front']
         user['left'] = data['image_left']
