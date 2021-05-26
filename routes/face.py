@@ -70,13 +70,13 @@ def get_user(collection: str, userID: str):
 
     user = {}
     data = moodle.get_image(userID)
-    log.info(data)
+
     if data:
         user['front'] = data['image_front']
         user['left'] = data['image_left']
         user['right'] = data['image_right']
 
-    return response(200, 'success', res)
+    return response(200, 'success', user)
 
 
 @face_bp.route('/<collection>/<userID>', methods=['POST', 'PUT'])
