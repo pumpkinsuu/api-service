@@ -68,7 +68,7 @@ def checkin(roomid, username):
         'username': username
     }
     r = req.post(url, params=params)
-    return bool(res(r))
+    return res(r)
 
 
 def room_schedule(roomid, date):
