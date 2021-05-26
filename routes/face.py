@@ -184,7 +184,7 @@ def check(roomID: str):
             if moodle.checkin(roomID, userID, 1):
                 user['status'] = 1
             else:
-                user['status'] = 2
+                user['status'] = 3
 
             users.append(user)
 
