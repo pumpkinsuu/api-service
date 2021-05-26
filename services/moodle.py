@@ -4,7 +4,7 @@ import moodle_config as moodle
 
 from utilities import logger, ErrorAPI
 
-log = logger('services')
+log = logger('moodle')
 
 
 def res(r):

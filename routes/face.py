@@ -4,7 +4,7 @@ from routes.api import verify
 import services.face as face
 import services.moodle as moodle
 from utilities import ErrorAPI, response, logger
-log = logger('face.py')
+log = logger('face')
 
 
 face_bp = Blueprint('face_bp', __name__)
