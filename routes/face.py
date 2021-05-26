@@ -178,6 +178,7 @@ def check(roomID: str):
         for userID in userIDs:
             if not userID:
                 users.append({'status': 0})
+                continue
 
             user = moodle.user_info(userID)
 
