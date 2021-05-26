@@ -181,8 +181,9 @@ def check(roomID: str):
                 continue
 
             user = moodle.user_info(userID)
-
-            if moodle.checkin(roomID, userID, 1):
+            res = moodle.checkin(roomID, userID, 1)
+            log.info(res, exc_info=True)
+            if res:
                 user['status'] = 1
             else:
                 user['status'] = 2
