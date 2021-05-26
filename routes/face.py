@@ -152,7 +152,7 @@ def remove(collection: str, userID: str):
 
 
 @face_bp.route('/checkin/<roomID>', methods=['POST'])
-def check(roomID: str):
+def check(roomID: int):
     try:
         verify(request.args)
 
