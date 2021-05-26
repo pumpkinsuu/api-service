@@ -14,7 +14,7 @@ def res(r):
 
     result = r.json()
     if 'errorcode' in result and result['errorcode']:
-        log.info(result['errorcode'], exc_info=True)
+        log.info(result, exc_info=True)
         return {}
 
     return result
