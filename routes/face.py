@@ -207,14 +207,13 @@ def check(roomid):
             user = moodle.user_info(userID)
             user['avatar'] = moodle.get_image(userID)['image_front']
             user['status'] = 200
-            user['message'] = 'checkin successfully'
             res = moodle.checkin(
                 roomid=roomid,
                 username=userID
             )
             if 'status' in res:
                 user['status'] = res['status']
-                user['message'] = res['message']
+            user['message'] = res['message']
 
             users.append(user)
 
