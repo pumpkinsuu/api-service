@@ -181,7 +181,7 @@ def check(roomid):
             raise ErrorAPI(400, 'missing "collection"')
         if 'images' not in request.json:
             raise ErrorAPI(400, 'missing "images"')
-        if isinstance(request.json['images'], list):
+        if not isinstance(request.json['images'], list):
             raise ErrorAPI(400, '"images" type list')
 
         userIDs = face.find(
