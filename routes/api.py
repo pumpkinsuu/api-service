@@ -58,7 +58,7 @@ def login():
         raise ErrorAPI(500, str(ex))
 
 
-@api_bp.route('/get-student-reports ', methods=['GET'])
+@api_bp.route('/get-student-reports', methods=['GET'])
 def get_student_log():
     try:
         verify(request.args)
