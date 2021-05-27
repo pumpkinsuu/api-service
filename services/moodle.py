@@ -17,7 +17,7 @@ def res_handle(r):
         raise ErrorAPI(500, 'incorrect moodle content-type')
 
     res = r.json()
-    if 'errorcode' in res:
+    if 'errorcode' in res and res['errorcode']:
         err = {
             'status': 500,
             'message': res['errorcode']
