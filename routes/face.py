@@ -12,75 +12,93 @@ face_bp = Blueprint('face_bp', __name__)
 
 @face_bp.route('/<collection>', methods=['GET'])
 def get_users(collection: str):
-    verify(request.args)
+    try:
+        verify(request.args)
 
-    res = face.users(collection)
-    if 'error' in res:
-        raise ErrorAPI(
-            res['error']['code'],
-            res['error']['message']
-        )
-
-    return response(200, 'success', res)
+        res = face.users(collection)
+        if 'error' in res:
+            raise ErrorAPI(
+                res['error']['code'],
+                res['error']['message']
+            )
+        return response(200, 'success', res)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
 @face_bp.route('/<collection>', methods=['POST'])
 def rename_collection(collection: str):
-    verify(request.args, admin=True)
+    try:
+        verify(request.args, admin=True)
 
-    if 'name' not in request.json:
-        raise ErrorAPI(400, 'missing "name"')
-    res = face.rename(
-        collection,
-        request.json['name']
-    )
-    if 'error' in res:
-        raise ErrorAPI(
-            res['error']['code'],
-            res['error']['message']
+        if 'name' not in request.json:
+            raise ErrorAPI(400, 'missing "name"')
+        res = face.rename(
+            collection,
+            request.json['name']
         )
-
-    return response(200, 'success', res)
+        if 'error' in res:
+            raise ErrorAPI(
+                res['error']['code'],
+                res['error']['message']
+            )
+        return response(200, 'success', res)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
 @face_bp.route('/<collection>', methods=['DELETE'])
 def drop_collection(collection: str):
-    verify(request.args, admin=True)
+    try:
+        verify(request.args, admin=True)
 
-    res = face.drop(collection)
-    if 'error' in res:
-        raise ErrorAPI(
-            res['error']['code'],
-            res['error']['message']
-        )
-
-    return response(200, 'success', res)
+        res = face.drop(collection)
+        if 'error' in res:
+            raise ErrorAPI(
+                res['error']['code'],
+                res['error']['message']
+            )
+        return response(200, 'success', res)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
 @face_bp.route('/<collection>/<userID>', methods=['GET'])
 def get_user(collection: str, userID: str):
-    verify(request.args)
+    try:
+        verify(request.args)
 
-    res = face.exist(collection, userID)
-    if 'error' in res:
-        raise ErrorAPI(
-            res['error']['code'],
-            res['error']['message']
-        )
-
-    user = {}
-    data = moodle.get_image(userID)
-
-    if data:
+        res = face.exist(collection, userID)
+        if 'error' in res:
+            raise ErrorAPI(
+                res['error']['code'],
+                res['error']['message']
+            )
+        user = {}
+        data = moodle.get_image(userID)
         user['front'] = data['image_front']
         user['left'] = data['image_left']
         user['right'] = data['image_right']
 
-    return response(200, 'success', user)
+        return response(200, 'success', user)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
-@face_bp.route('/<collection>/<userID>', methods=['POST', 'PUT'])
-def update_user(collection: str, userID: str):
+@face_bp.route('/<collection>/<username>', methods=['POST', 'PUT'])
+def update_user(collection: str, username: str):
     try:
         verify(request.args, admin=True)
 
@@ -91,18 +109,16 @@ def update_user(collection: str, userID: str):
         if 'right' not in request.form:
             raise ErrorAPI(400, 'missing "right"')
 
-        if not moodle.user_info(userID):
+        if not moodle.user_info(username):
             raise ErrorAPI(404, 'user not found')
 
-        res = face.exist(collection, userID)
-
+        res = face.exist(collection, username)
         user = {
-            'id': userID,
+            'id': username,
             'front': request.form['front'],
             'left': request.form['left'],
             'right': request.form['right']
         }
-
         if 'error' in res:
             code = 201
             message = 'created'
@@ -119,18 +135,17 @@ def update_user(collection: str, userID: str):
             )
         if code == 200 or code == 201:
             res = moodle.create_image(
-                user['id'],
-                user['front'],
-                user['left'],
-                user['right']
+                username=user['id'],
+                image_front=user['front'],
+                image_left=user['left'],
+                image_right=user['right']
             )
             if not res:
                 code = 500
                 message = 'failed to create image'
-                face.remove(collection, userID)
+                face.remove(collection, username)
 
         return response(code, message)
-
     except ErrorAPI as err:
         raise err
     except Exception as ex:
@@ -140,19 +155,25 @@ def update_user(collection: str, userID: str):
 
 @face_bp.route('/<collection>/<userID>', methods=['DELETE'])
 def remove(collection: str, userID: str):
-    verify(request.args, admin=True)
+    try:
+        verify(request.args, admin=True)
 
-    res = face.remove(collection, userID)
-    if 'error' in res:
-        raise ErrorAPI(
-            res['error']['code'],
-            res['error']['message']
-        )
-    return response(200, 'success')
+        res = face.remove(collection, userID)
+        if 'error' in res:
+            raise ErrorAPI(
+                res['error']['code'],
+                res['error']['message']
+            )
+        return response(200, 'success')
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
-@face_bp.route('/checkin/<roomID>', methods=['POST'])
-def check(roomID: int):
+@face_bp.route('/checkin/<roomid>', methods=['POST'])
+def check(roomid):
     try:
         verify(request.args)
 
@@ -160,42 +181,44 @@ def check(roomID: int):
             raise ErrorAPI(400, 'missing "collection"')
         if 'images' not in request.json:
             raise ErrorAPI(400, 'missing "images"')
+        if isinstance(request.json['images'], list):
+            raise ErrorAPI(400, '"images" type list')
 
         userIDs = face.find(
             request.json['collection'],
             request.json['images']
         )
         if not userIDs:
-            raise ErrorAPI(400, 'collection empty')
-
+            raise ErrorAPI(400, 'database empty')
         if 'error' in userIDs:
             raise ErrorAPI(
                 userIDs['error']['code'],
                 userIDs['error']['message']
             )
-
         users = []
         for userID in userIDs:
             if not userID:
-                users.append({'status': 0})
+                users.append({
+                    'status': 404,
+                    'message': 'face not registered'
+                })
                 continue
 
             user = moodle.user_info(userID)
-            res = moodle.checkin(roomID, userID)
-            log.info(res, exc_info=True)
-            if res:
-                user['status'] = 1
-            else:
-                user['status'] = 2
-
-            data = moodle.get_image(userID)
-            if data:
-                user['avatar'] = data['image_front']
+            user['avatar'] = moodle.get_image(userID)['image_front']
+            user['status'] = 200
+            user['message'] = 'checkin successfully'
+            res = moodle.checkin(
+                roomid=roomid,
+                username=userID
+            )
+            if 'status' in res:
+                user['status'] = res['status']
+                user['message'] = res['message']
 
             users.append(user)
 
         return response(200, 'success', users)
-
     except ErrorAPI as err:
         raise err
     except Exception as ex:
@@ -205,40 +228,43 @@ def check(roomID: int):
 
 @face_bp.route('/feedback', methods=['POST'])
 def face_feedback():
-    verify(request.args)
+    try:
+        verify(request.args)
 
-    if 'image' not in request.json:
-        raise ErrorAPI(400, 'missing "image"')
-    if 'collection' not in request.json:
-        raise ErrorAPI(400, 'missing "collection"')
-    if 'roomid' not in request.json:
-        raise ErrorAPI(400, 'missing "roomid"')
-    if 'usertaken' not in request.json:
-        raise ErrorAPI(400, 'missing "usertaken"')
-    if 'userbetaken' not in request.json:
-        raise ErrorAPI(400, 'missing "userbetaken"')
+        if 'image' not in request.json:
+            raise ErrorAPI(400, 'missing "image"')
+        if 'collection' not in request.json:
+            raise ErrorAPI(400, 'missing "collection"')
+        if 'roomid' not in request.json:
+            raise ErrorAPI(400, 'missing "roomid"')
+        if 'usertaken' not in request.json:
+            raise ErrorAPI(400, 'missing "usertaken"')
+        if 'userbetaken' not in request.json:
+            raise ErrorAPI(400, 'missing "userbetaken"')
 
-    description = 'Mistaken in face recognition'
-    if 'description' in request.json:
-        description = request.json['description']
+        description = 'mistaken in face recognition'
+        if 'description' in request.json:
+            description = request.json['description']
 
-    res = face.exist(
-        request.json['collection'],
-        request.json['usertaken']
-    )
-    if 'error' in res:
-        raise ErrorAPI(
-            res['error']['code'],
-            res['error']['message']
+        res = face.exist(
+            request.json['collection'],
+            request.json['usertaken']
         )
-
-    if not moodle.create_feedback(
+        if 'error' in res:
+            raise ErrorAPI(
+                res['error']['code'],
+                res['error']['message']
+            )
+        moodle.create_feedback(
             roomid=request.json['roomid'],
             usertaken=request.json['usertaken'],
             userbetaken=request.json['userbetaken'],
             description=description,
             image=request.json['image']
-    ):
-        raise ErrorAPI(500, 'failed')
-
-    return response(200, 'success')
+        )
+        return response(200, 'success')
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))

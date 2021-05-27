@@ -7,17 +7,28 @@ from utilities import logger, ErrorAPI
 log = logger('moodle')
 
 
-def res(r):
+def res_handle(r):
     if r.status_code != 200:
         log.info(r.status_code, exc_info=True)
         raise ErrorAPI(500, r.status_code)
 
-    result = r.json()
-    if 'errorcode' in result and result['errorcode']:
-        log.info(result, exc_info=True)
-        return {}
+    if r.headers['content-type'] != 'application/json':
+        log.info(r.headers['content-type'], exc_info=True)
+        raise ErrorAPI(500, 'incorrect moodle content-type')
 
-    return result
+    res = r.json()
+    if 'errorcode' in res:
+        err = {
+            'status': 500,
+            'message': res['errorcode']
+        }
+        if res['errorcode'].isnumeric():
+            err['status'] = int(res['errorcode'])
+        if 'message' in res:
+            err['message'] = res['message']
+        return err
+
+    return res
 
 
 def user_info(username):
@@ -29,9 +40,12 @@ def user_info(username):
         'username': username
     }
     r = req.get(url, params=params)
-    user = res(r)
-    if user:
-        return user[0]
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    if res and isinstance(res, list):
+        return res[0]
     return {}
 
 
@@ -43,7 +57,13 @@ def token_info(token):
         'wsfunction': moodle.TOKEN_INFO
     }
     r = req.get(url, params=params)
-    return res(r)
+    res = res_handle(r)
+
+    if 'status' in res:
+        if res['message'] == 'invalidtoken':
+            raise ErrorAPI(401, 'unauthorized request')
+        raise ErrorAPI(res['status'], res['message'])
+    return res
 
 
 def login(username, password):
@@ -54,8 +74,32 @@ def login(username, password):
         'username': username,
         'password': password
     }
-    r = req.get(url, params=params)
-    return res(r)
+    r = req.post(url, params=params)
+    res = res_handle(r)
+
+    if 'status' in res:
+        if res['message'] == 'invalidlogin':
+            raise ErrorAPI(401, 'wrong username or password')
+        raise ErrorAPI(res['status'], res['message'])
+    return res['token']
+
+
+def update_log(sessionid, username, statusid):
+    url = f'{moodle.URL}/webservice/rest/server.php'
+    params = {
+        'moodlewsrestformat': 'json',
+        'wstoken': moodle.WSTOKEN,
+        'wsfunction': moodle.UPDATE_LOG,
+        'sessionid': sessionid,
+        'username': username,
+        'statusid': statusid
+    }
+    r = req.post(url, params=params)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    return res
 
 
 def checkin(roomid, username):
@@ -68,7 +112,7 @@ def checkin(roomid, username):
         'username': username
     }
     r = req.post(url, params=params)
-    return res(r)
+    return res_handle(r)
 
 
 def room_schedule(roomid, date):
@@ -81,7 +125,11 @@ def room_schedule(roomid, date):
         'date': date
     }
     r = req.get(url, params=params)
-    return res(r)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    return res
 
 
 def session(sessionid):
@@ -93,7 +141,11 @@ def session(sessionid):
         'sessionid': sessionid
     }
     r = req.get(url, params=params)
-    return res(r)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    return res
 
 
 def reports(attendanceid):
@@ -105,23 +157,28 @@ def reports(attendanceid):
         'attendanceid': attendanceid
     }
     r = req.get(url, params=params)
-    return res(r)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    return res
 
 
-def student_log(username, courseid):
+def student_log(studentid, courseid):
     url = f'{moodle.URL}/webservice/rest/server.php'
     params = {
         'moodlewsrestformat': 'json',
         'wstoken': moodle.WSTOKEN,
         'wsfunction': moodle.GET_STUDENT_LOG,
-        'username': username,
+        'studentid': studentid,
         'courseid': courseid
     }
     r = req.get(url, params=params)
-    user = res(r)
-    if user:
-        return user[0]
-    return {}
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    return res
 
 
 def log_by_course(courseid):
@@ -133,19 +190,27 @@ def log_by_course(courseid):
         'courseid': courseid
     }
     r = req.get(url, params=params)
-    return res(r)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    return res
 
 
-def room_by_campus(campusid):
+def room_by_campus(campus):
     url = f'{moodle.URL}/webservice/rest/server.php'
     params = {
         'moodlewsrestformat': 'json',
         'wstoken': moodle.WSTOKEN,
         'wsfunction': moodle.ROOM_BY_CAMPUS,
-        'campus': campusid
+        'campus': campus
     }
     r = req.get(url, params=params)
-    return res(r)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    return res
 
 
 def schedules(token, userid):
@@ -157,7 +222,11 @@ def schedules(token, userid):
         'userid': userid
     }
     r = req.get(url, params=params)
-    return res(r)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    return res
 
 
 def create_feedback(roomid,
@@ -177,7 +246,11 @@ def create_feedback(roomid,
         'image': image
     }
     r = req.post(url, params=params)
-    return res(r)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    return res
 
 
 def create_image(username, image_front, image_left, image_right):
@@ -192,7 +265,11 @@ def create_image(username, image_front, image_left, image_right):
         'image_right': image_right
     }
     r = req.post(url, data=data)
-    return res(r)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    return res
 
 
 def get_image(username):
@@ -204,7 +281,12 @@ def get_image(username):
         'username': username
     }
     r = req.post(url, params=params)
-    data = res(r)
-    if data:
-        return data[0]
-    return {}
+    res = res_handle(r)
+
+    if not res:
+        raise ErrorAPI(404, 'images not found')
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    if isinstance(res, list):
+        return res[0]
+    return res

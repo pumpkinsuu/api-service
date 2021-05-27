@@ -1,10 +1,11 @@
 from flask import Blueprint, request
 
 import services.moodle as moodle
-from utilities import ErrorAPI, response
 
 from moodle_config import DEF_ROLE, ADMIN_ROLE
 from config import API_KEY
+from utilities import ErrorAPI, response, logger
+log = logger('api')
 
 
 def verify(args, admin=False):
@@ -14,17 +15,17 @@ def verify(args, admin=False):
     if args['token'] == API_KEY:
         return
 
-    result = moodle.token_info(args['token'])
-    if not result:
-        raise ErrorAPI(401, 'unauthorized request')
+    res = moodle.token_info(args['token'])
+
+    user = moodle.user_info(res['username'])
+    if not user:
+        raise ErrorAPI(404, 'userinfo not found')
+    if user['isadmin']:
+        return
 
     role = DEF_ROLE
     if admin:
         role = ADMIN_ROLE
-
-    user = moodle.user_info(result['username'])
-    if user['isadmin']:
-        return
 
     if not user or user['roleid'] not in role:
         raise ErrorAPI(401, 'no permission')
@@ -35,146 +36,193 @@ api_bp = Blueprint('api_bp', __name__)
 
 @api_bp.route('/login', methods=['POST'])
 def login():
-    if 'username' not in request.json:
-        raise ErrorAPI(400, 'missing "username"')
-    if 'password' not in request.json:
-        raise ErrorAPI(400, 'missing "password"')
+    try:
+        if 'username' not in request.json:
+            raise ErrorAPI(400, 'missing "username"')
+        if 'password' not in request.json:
+            raise ErrorAPI(400, 'missing "password"')
 
-    result = moodle.login(request.json['username'], request.json['password'])
-    if not result:
-        raise ErrorAPI(401, 'wrong username or password')
+        user = moodle.user_info(request.json['username'])
+        if not user:
+            raise ErrorAPI(404, 'userinfo not found')
 
-    user = moodle.user_info(request.json['username'])
-    user['token'] = result['token']
-
-    return response(200, 'success', user)
+        user['token'] = moodle.login(
+            username=request.json['username'],
+            password=request.json['password']
+        )
+        return response(200, 'success', user)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
 @api_bp.route('/get-student-reports ', methods=['GET'])
 def get_student_log():
-    verify(request.args)
+    try:
+        verify(request.args)
 
-    if 'username' not in request.args:
-        raise ErrorAPI(400, 'missing "username"')
-    if 'courseid' not in request.args:
-        raise ErrorAPI(400, 'missing "courseid"')
+        if 'studentid' not in request.args:
+            raise ErrorAPI(400, 'missing "studentid"')
+        if 'courseid' not in request.args:
+            raise ErrorAPI(400, 'missing "courseid"')
 
-    reports = moodle.student_log(request.args['username'], request.args['courseid'])
-    if not reports:
-        raise ErrorAPI(404, 'student\'s report not found')
-
-    return response(200, 'success', reports)
+        reports = moodle.student_log(
+            studentid=request.args['studentid'],
+            courseid=request.args['courseid']
+        )
+        return response(200, 'success', reports)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
 @api_bp.route('/get-reports/<courseID>', methods=['GET'])
 def get_log_by_course(courseID):
-    verify(request.args)
+    try:
+        verify(request.args)
 
-    reports = moodle.log_by_course(courseID)
-    if not reports:
-        raise ErrorAPI(404, 'course not found')
-
-    return response(200, 'success', reports)
+        reports = moodle.log_by_course(courseID)
+        return response(200, 'success', reports)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
 @api_bp.route('/room-schedules', methods=['GET'])
 def room_schedule():
-    verify(request.args)
+    try:
+        verify(request.args)
 
-    if 'roomid' not in request.args:
-        raise ErrorAPI(400, 'missing "roomid"')
-    if 'date' not in request.args:
-        raise ErrorAPI(400, 'missing "date"')
+        if 'roomid' not in request.args:
+            raise ErrorAPI(400, 'missing "roomid"')
+        if 'date' not in request.args:
+            raise ErrorAPI(400, 'missing "date"')
 
-    schedule = moodle.room_schedule(
-        request.args['roomid'],
-        request.args['date']
-    )
-    if not schedule:
-        raise ErrorAPI(404, 'schedule not found')
-
-    return response(200, 'success', schedule)
+        schedule = moodle.room_schedule(
+            roomid=request.args['roomid'],
+            date=request.args['date']
+        )
+        return response(200, 'success', schedule)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
 @api_bp.route('/rooms', methods=['GET'])
 def get_rooms():
-    verify(request.args)
+    try:
+        verify(request.args)
 
-    if 'campus' not in request.args:
-        raise ErrorAPI(400, 'missing "campus"')
+        if 'campus' not in request.args:
+            raise ErrorAPI(400, 'missing "campus"')
 
-    reports = moodle.room_by_campus(request.args['campus'])
-    if not reports:
-        raise ErrorAPI(404, 'campus not found')
-
-    return response(200, 'success', reports)
+        rooms = moodle.room_by_campus(request.args['campus'])
+        return response(200, 'success', rooms)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
 @api_bp.route('/teacher-schedules', methods=['GET'])
 def get_schedules():
-    verify(request.args)
+    try:
+        verify(request.args)
 
-    user = moodle.token_info(request.args['token'])
-
-    schedules = moodle.schedules(
-        request.args['token'],
-        user['userid']
-    )
-    if not schedules:
-        raise ErrorAPI(404, 'schedules not found')
-
-    return response(200, 'success', schedules)
-
-
-@api_bp.route('/session/<sessionID>', methods=['GET'])
-def get_session(sessionID):
-    verify(request.args)
-
-    session = moodle.session(sessionID)
-    if not session:
-        raise ErrorAPI(404, 'session not found')
-
-    return response(200, 'success', session)
+        user = moodle.token_info(request.args['token'])
+        schedules = moodle.schedules(
+            token=request.args['token'],
+            userid=user['userid']
+        )
+        return response(200, 'success', schedules)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
-@api_bp.route('/update-attendance-log/<roomID>', methods=['POST'])
-def manual_check(roomID):
-    verify(request.args)
+@api_bp.route('/session/<sessionid>', methods=['GET'])
+def get_session(sessionid):
+    try:
+        verify(request.args)
 
-    if 'students' not in request.json:
-        raise ErrorAPI(400, 'missing "students"')
+        session = moodle.session(sessionid)
+        return response(200, 'success', session)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
-    for student in request.json['students']:
-        if not moodle.checkin(roomID, student['username']):
-            raise ErrorAPI(400, 'failed to checkin')
 
-    return response(200, 'success')
+@api_bp.route('/update-attendance-log/<sessionid>', methods=['POST'])
+def manual_check(sessionid):
+    try:
+        verify(request.args)
+
+        if 'students' not in request.json:
+            raise ErrorAPI(400, 'missing "students"')
+        if not isinstance(request.json['students'], list):
+            raise ErrorAPI(400, '"students" type list')
+
+        for student in request.json['students']:
+            moodle.update_log(
+                sessionid=sessionid,
+                username=student['username'],
+                statusid=student['statusid']
+            )
+        return response(200, 'success')
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
 @api_bp.route('/students/<username>', methods=['GET'])
 def get_student(username):
-    verify(request.args)
+    try:
+        verify(request.args)
 
-    student = moodle.user_info(username)
-
-    if not student:
-        raise ErrorAPI(404, 'username not found')
-
-    return response(200, 'success', student)
+        user = moodle.user_info(username)
+        if not user:
+            raise ErrorAPI(404, 'userinfo not found')
+        return response(200, 'success', user)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
 
 
 @api_bp.route('/campus', methods=['GET'])
 def get_campus():
-    verify(request.args)
+    try:
+        verify(request.args)
 
-    campus = [
-            {
-                'id': 'NVC',
-                'name': 'Nguyễn Văn Cừ'
-            },
-            {
-                'id': 'LT',
-                'name': 'Linh Trung'
-            }
-    ]
-    return response(200, 'success', campus)
+        campus = [
+                {
+                    'id': 'NVC',
+                    'name': 'Nguyễn Văn Cừ'
+                },
+                {
+                    'id': 'LT',
+                    'name': 'Linh Trung'
+                }
+        ]
+        return response(200, 'success', campus)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
