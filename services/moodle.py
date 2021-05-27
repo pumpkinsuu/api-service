@@ -164,13 +164,13 @@ def reports(attendanceid):
     return res
 
 
-def student_log(studentid, courseid):
+def student_log(username, courseid):
     url = f'{moodle.URL}/webservice/rest/server.php'
     params = {
         'moodlewsrestformat': 'json',
         'wstoken': moodle.WSTOKEN,
         'wsfunction': moodle.GET_STUDENT_LOG,
-        'studentid': studentid,
+        'username': username,
         'courseid': courseid
     }
     r = req.get(url, params=params)

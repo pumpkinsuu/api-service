@@ -63,13 +63,13 @@ def get_student_log():
     try:
         verify(request.args)
 
-        if 'studentid' not in request.args:
-            raise ErrorAPI(400, 'missing "studentid"')
+        if 'username' not in request.args:
+            raise ErrorAPI(400, 'missing "username"')
         if 'courseid' not in request.args:
             raise ErrorAPI(400, 'missing "courseid"')
 
         reports = moodle.student_log(
-            studentid=request.args['studentid'],
+            username=request.args['username'],
             courseid=request.args['courseid']
         )
         return response(200, 'success', reports)
