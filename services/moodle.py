@@ -12,7 +12,7 @@ def res_handle(r):
         log.info(r.status_code, exc_info=True)
         raise ErrorAPI(500, r.status_code)
 
-    if r.headers['content-type'] != 'application/json':
+    if 'application/json' not in r.headers['content-type']:
         log.info(r.headers['content-type'], exc_info=True)
         raise ErrorAPI(500, 'incorrect moodle content-type')
 
