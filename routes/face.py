@@ -205,7 +205,6 @@ def check(roomid):
                 continue
 
             user = moodle.user_info(userID)
-            user['avatar'] = moodle.get_image(userID)['image_front']
             user['status'] = 200
             res = moodle.checkin(
                 roomid=roomid,
