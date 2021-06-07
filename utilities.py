@@ -29,7 +29,7 @@ def logger(file):
     return log
 
 
-def response(status, message, data=''):
+def response(status, message, data=None):
     return jsonify({
         'status': status,
         'message': message,
