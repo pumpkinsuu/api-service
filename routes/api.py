@@ -166,7 +166,7 @@ def get_session(sessionid):
 
  
 @api_bp.route('/sessions/<courseid>', methods=['GET'])
-def get_session(courseid):
+def get_sessions(courseid):
     try:
         verify(request.args)
 
