@@ -148,6 +148,22 @@ def session(sessionid):
     return res
 
 
+def sessions(courseid):
+    url = f'{moodle.URL}/webservice/rest/server.php'
+    params = {
+        'moodlewsrestformat': 'json',
+        'wstoken': moodle.WSTOKEN,
+        'wsfunction': moodle.SESSIONS,
+        'courseid': courseid
+    }
+    r = req.get(url, params=params)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'])
+    return res
+
+
 def reports(attendanceid):
     url = f'{moodle.URL}/webservice/rest/server.php'
     params = {
