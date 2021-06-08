@@ -17,6 +17,7 @@ ROOM_SCHEDULE = 'local_webservices_get_schedules'
 ROOM_BY_CAMPUS = 'local_webservices_get_rooms'
 
 SESSION = 'local_webservices_get_session_detail'
+SESSIONS = 'local_webservices_get_sessions_by_course_id'
 GET_COURSE = 'core_enrol_get_users_courses'
 
 CREATE_FEEDBACK = 'local_webservices_create_feedback'
