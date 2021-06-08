@@ -72,6 +72,8 @@ def get_student_log():
             username=request.args['username'],
             courseid=request.args['courseid']
         )
+        if not reports:
+            reports = None
         return response(200, 'success', reports)
     except ErrorAPI as err:
         raise err
@@ -86,6 +88,8 @@ def get_log_by_course(courseID):
         verify(request.args)
 
         reports = moodle.log_by_course(courseID)
+        if not reports:
+            reports = None
         return response(200, 'success', reports)
     except ErrorAPI as err:
         raise err
@@ -108,6 +112,8 @@ def room_schedule():
             roomid=request.args['roomid'],
             date=request.args['date']
         )
+        if not schedule:
+            schedule = None
         return response(200, 'success', schedule)
     except ErrorAPI as err:
         raise err
@@ -125,6 +131,8 @@ def get_rooms():
             raise ErrorAPI(400, 'missing "campus"')
 
         rooms = moodle.room_by_campus(request.args['campus'])
+        if not rooms:
+            rooms = None
         return response(200, 'success', rooms)
     except ErrorAPI as err:
         raise err
@@ -143,6 +151,8 @@ def get_schedules():
             token=request.args['token'],
             userid=user['userid']
         )
+        if not schedules:
+            schedules = None
         return response(200, 'success', schedules)
     except ErrorAPI as err:
         raise err
@@ -157,6 +167,8 @@ def get_session(sessionid):
         verify(request.args)
 
         session = moodle.session(sessionid)
+        if not session:
+            session = None
         return response(200, 'success', session)
     except ErrorAPI as err:
         raise err
@@ -171,6 +183,8 @@ def get_sessions(courseid):
         verify(request.args)
 
         sessions = moodle.sessions(courseid)
+        if not sessions:
+            sessions = None
         return response(200, 'success', sessions)
     except ErrorAPI as err:
         raise err
