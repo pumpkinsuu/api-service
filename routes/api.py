@@ -164,6 +164,20 @@ def get_session(sessionid):
         log.info(str(ex), exc_info=True)
         raise ErrorAPI(500, str(ex))
 
+ 
+@api_bp.route('/sessions/<courseid>', methods=['GET'])
+def get_session(courseid):
+    try:
+        verify(request.args)
+
+        sessions = moodle.sessions(courseid)
+        return response(200, 'success', sessions)
+    except ErrorAPI as err:
+        raise err
+    except Exception as ex:
+        log.info(str(ex), exc_info=True)
+        raise ErrorAPI(500, str(ex))
+ 
 
 @api_bp.route('/update-attendance-log/<sessionid>', methods=['POST'])
 def manual_check(sessionid):
