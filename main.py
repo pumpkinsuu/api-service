@@ -1,14 +1,20 @@
-from flask import Flask
+from flask import Flask, request, g
 from flask_cors import CORS
 
-from config import *
-
+from config.server import *
+from config.moodle import ROLE
+from database import KeyData
 from routes.face import face_bp
 from routes.api import api_bp
-from utilities import ErrorAPI, response
+from services.moodle import token_info, user_info
+from utilities import ErrorAPI, response, logger
+log = logger('error')
 
 app = Flask(__name__)
 CORS(app)
+
+
+key_db = KeyData(app)
 
 
 @app.errorhandler(ErrorAPI)
@@ -16,9 +22,58 @@ def error_api(e: ErrorAPI):
     return e.detail()
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return response(404, 'page not found')
+@app.errorhandler(Exception)
+def exception(e):
+    log.info(str(e), exc_info=True)
+    raise ErrorAPI(500, str(e))
+
+
+@app.before_request
+def check_request():
+    if '/admin' in request.path:
+        if request.headers.get('secret') != SECRET:
+            raise ErrorAPI(401, 'no permission')
+        return
+
+    if 'moodle' not in request.headers:
+        raise ErrorAPI(400, 'no moodle provided')
+    moodle = request.headers['moodle']
+    # Check moodle
+    data = key_db.get_data(moodle)
+    if not data:
+        raise ErrorAPI(400, 'invalid moodle')
+    g['key'] = data['key']
+    g['wstoken'] = data['wstoken']
+
+    if '/api/login' in request.path:
+        return
+
+    if 'token' not in request.headers:
+        raise ErrorAPI(400, 'no token provided')
+    token = request.headers['token']
+    # Check token
+    res = token_info(
+        moodle=moodle,
+        wstoken=g['wstoken'],
+        token=token
+    )
+    g['username'] = res['username']
+    g['userid'] = res['userid']
+
+    user = user_info(
+        moodle=moodle,
+        wstoken=g['wstoken'],
+        username=res['username']
+    )
+    if not user:
+        raise ErrorAPI(404, 'userinfo not found')
+    # Check role
+    if USER_ROUTES in request.path:
+        return
+    if user['isadmin']:
+        return
+    if user['roleid'] not in ROLE:
+        raise ErrorAPI(401, 'no permission')
 
 
 @app.route('/', methods=['GET'])

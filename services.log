@@ -1,3 +1,0 @@
-[2021-05-26 10:45:41] — <werkzeug>:  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
-[2021-05-26 10:45:46] — <werkzeug>: 127.0.0.1 - - [26/May/2021 10:45:46] "[37mGET /face/CNTT?token=secret_key HTTP/1.1[0m" 200 -
-[2021-05-26 10:45:52] — <werkzeug>: 127.0.0.1 - - [26/May/2021 10:45:52] "[37mGET /face/CNTT/1712384?token=secret_key HTTP/1.1[0m" 200 -
