@@ -269,7 +269,7 @@ def create_feedback(roomid,
     return res
 
 
-def create_image(username, image_front, image_left, image_right):
+def create_image(username, image_front, image_left, image_right, replace=1):
     url = f'{moodle.URL}/webservice/rest/server.php'
     data = {
         'moodlewsrestformat': 'json',
@@ -278,7 +278,8 @@ def create_image(username, image_front, image_left, image_right):
         'username': username,
         'image_front': image_front,
         'image_left': image_left,
-        'image_right': image_right
+        'image_right': image_right,
+        'replace': replace
     }
     r = req.post(url, data=data)
     res = res_handle(r)
