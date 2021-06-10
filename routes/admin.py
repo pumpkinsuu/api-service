@@ -58,6 +58,10 @@ def create_admin_bp(app):
             moodle = request.form.get('moodle')
             wstoken = request.form.get('wstoken')
             key = request.form.get('key')
+
+            if moodle[-1] == '/':
+                moodle = moodle[:-1]
+
             if db.get_by_name(name):
                 flash('Name exist!', 'warn')
             elif db.get_data(moodle):
