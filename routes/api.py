@@ -11,7 +11,7 @@ api_bp = Blueprint('api_bp', __name__)
 @api_bp.route('/login', methods=['POST'])
 def login():
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
+    wstoken = g.wstoken
 
     if 'username' not in request.json:
         raise ErrorAPI(400, 'missing "username"')
