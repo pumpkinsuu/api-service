@@ -1,4 +1,4 @@
-from pymongo import MongoClient, TEXT
+from pymongo import MongoClient, TEXT, ASCENDING
 from flask_pymongo import PyMongo
 
 from config.server import MONGO_URI, KEY_DB
@@ -14,25 +14,31 @@ class KeyData:
             self.db = MongoClient(uri).db
 
         if self.db.count_documents({}) == 0:
-            self.db.create_index([('moodle', TEXT), ('key', TEXT)], unique=True)
+            self.db.create_index([('name', TEXT), ('moodle', TEXT), ('key', TEXT)], unique=True)
 
         self.log = logger('keyDB')
 
     def get_data(self, moodle: str):
         return self.db.find_one({'moodle': moodle})
 
+    def get_by_name(self, name: str):
+        return self.db.find_one({'name': name})
+
     def get(self):
-        results = self.db.find()
-        data = []
+        results = self.db.find().sort([("collection", ASCENDING)])
+        return list(results)
 
-        for res in results:
-            data.append(res)
+    def search(self, keyword):
+        results = self.db.find(
+            {"$text": {"$search": keyword}},
+            {"score": {"$meta": "textScore"}}
+        ).sort([("score", {"$meta": "textScore"})])
+        return list(results)
 
-        return data
-
-    def create(self, moodle: str, wstoken: str, key: str):
+    def create(self, name: str, moodle: str, wstoken: str, key: str):
         try:
             self.db.insert_one({
+                'name': name,
                 'moodle': moodle,
                 'wstoken': wstoken,
                 'key': key
@@ -42,14 +48,18 @@ class KeyData:
             self.log.info(ex, exc_info=True)
             return False
 
-    def update(self, moodle: str, data: dict):
+    def update(self, name: str, moodle: str, wstoken: str, key: str):
         try:
             self.db.update_one(
                 {
-                    'moodle': moodle
+                    'name': name
                 },
                 {
-                    "$set": data
+                    "$set": {
+                        'moodle': moodle,
+                        'wstoken': wstoken,
+                        'key': key
+                    }
                 }
             )
             return True
@@ -57,9 +67,9 @@ class KeyData:
             self.log.info(ex, exc_info=True)
             return True
 
-    def remove(self, moodle: str):
+    def remove(self, name: str):
         try:
-            self.db.delete_one({'moodle': moodle})
+            self.db.delete_one({'name': name})
             return True
         except Exception as ex:
             self.log.info(ex, exc_info=True)

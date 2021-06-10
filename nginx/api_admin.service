@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn instance to serve api admin service
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+User=pumpk
+Group=www-data
+WorkingDirectory=/home/pumpk/api-service
+Environment="PATH=/home/pumpk/env/bin"
+ExecStart=/home/pumpk/env/bin/gunicorn --workers 1 --bind 0.0.0.0:7000 admin:app
+
+[Install]
+WantedBy=multi-user.target

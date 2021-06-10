@@ -30,11 +30,6 @@ def exception(e):
 
 @app.before_request
 def check_request():
-    if '/admin' in request.path:
-        if request.headers.get('secret') != SECRET:
-            raise ErrorAPI(401, 'no permission')
-        return
-
     if 'moodle' not in request.headers:
         raise ErrorAPI(400, 'no moodle provided')
     moodle = request.headers['moodle']
