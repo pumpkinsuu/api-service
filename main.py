@@ -49,7 +49,7 @@ def check_request():
     # Check token
     res = token_info(
         moodle=moodle,
-        wstoken=g['wstoken'],
+        wstoken=g.wstoken,
         token=token
     )
     g.username = res['username']
@@ -57,7 +57,7 @@ def check_request():
 
     user = user_info(
         moodle=moodle,
-        wstoken=g['wstoken'],
+        wstoken=g.wstoken,
         username=res['username']
     )
     if not user:
