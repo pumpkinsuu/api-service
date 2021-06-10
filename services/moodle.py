@@ -49,12 +49,12 @@ def user_info(moodle, wstoken, username):
     return {}
 
 
-def token_info(moodle, wstoken, token):
+def token_info(moodle, token):
     url = f'{moodle}/webservice/rest/server.php'
     params = {
         'moodlewsrestformat': 'json',
         'wstoken': token,
-        'wsfunction': wstoken
+        'wsfunction': TOKEN_INFO
     }
     r = req.get(url, params=params)
     res = res_handle(r)
