@@ -28,7 +28,7 @@ def get_user():
             res['error']['message']
         )
     user = {}
-    data = moodle.get_image(
+    data = moodle_sv.get_image(
         moodle=moodle,
         wstoken=wstoken,
         username=username
