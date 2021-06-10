@@ -276,7 +276,8 @@ def create_image(moodle,
                  username,
                  image_front,
                  image_left,
-                 image_right):
+                 image_right,
+                 replace):
     url = f'{moodle}/webservice/rest/server.php'
     data = {
         'moodlewsrestformat': 'json',
@@ -285,7 +286,8 @@ def create_image(moodle,
         'username': username,
         'image_front': image_front,
         'image_left': image_left,
-        'image_right': image_right
+        'image_right': image_right,
+        'replace': replace
     }
     r = req.post(url, data=data)
     res = res_handle(r)

@@ -6,94 +6,94 @@ from utilities import logger, ErrorAPI
 log = logger('face')
 
 
-def users(collection: str):
+def users(api_key: str):
     try:
-        url = f'{server.FACE_URL}/{collection}/users'
-        r = req.get(url)
+        headers = {
+            'api_key': api_key
+        }
+        url = f'{server.FACE_URL}/users'
+        r = req.get(url, headers=headers)
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
         raise ErrorAPI(500, str(ex))
 
 
-def exist(collection: str, userID: str):
+def exist(api_key: str, userID: str):
     try:
-        url = f'{server.FACE_URL}/{collection}/users/{userID}'
-        r = req.get(url)
+        headers = {
+            'api_key': api_key
+        }
+        url = f'{server.FACE_URL}/users/{userID}'
+        r = req.get(url, headers=headers)
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
         raise ErrorAPI(500, str(ex))
 
 
-def create(collection: str, user: dict):
+def create(api_key: str, user: dict):
     try:
-        url = f'{server.FACE_URL}/{collection}/users/{user["id"]}'
-        r = req.post(url, data=user)
+        headers = {
+            'api_key': api_key
+        }
+        url = f'{server.FACE_URL}/users/{user["id"]}'
+        r = req.post(url, data=user, headers=headers)
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
         raise ErrorAPI(500, str(ex))
 
 
-def update(collection: str, user: dict):
+def update(api_key: str, user: dict):
     try:
-        url = f'{server.FACE_URL}/{collection}/users/{user["id"]}'
-        r = req.put(url, data=user)
+        headers = {
+            'api_key': api_key
+        }
+        url = f'{server.FACE_URL}/users/{user["id"]}'
+        r = req.put(url, data=user, headers=headers)
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
         raise ErrorAPI(500, str(ex))
 
 
-def remove(collection: str, userID):
+def remove(api_key: str, userID):
     try:
-        url = f'{server.FACE_URL}/{collection}/users/{userID}'
-        r = req.delete(url)
+        headers = {
+            'api_key': api_key
+        }
+        url = f'{server.FACE_URL}/users/{userID}'
+        r = req.delete(url, headers=headers)
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
         raise ErrorAPI(500, str(ex))
 
 
-def find(collection: str, images: list):
+def find(api_key: str, images: list):
     try:
-        url = f'{server.FACE_URL}/{collection}/find'
+        headers = {
+            'api_key': api_key
+        }
+        url = f'{server.FACE_URL}/find'
         data = {
             'images': images
         }
-        r = req.post(url, data=data)
+        r = req.post(url, data=data, headers=headers)
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)
         raise ErrorAPI(500, str(ex))
 
 
-def count(collection: str):
+def count(api_key: str):
     try:
-        url = f'{server.FACE_URL}/{collection}'
-        r = req.get(url)
-        return r.json()
-    except Exception as ex:
-        log.info(str(ex), exc_info=True)
-        raise ErrorAPI(500, str(ex))
-
-
-def rename(collection: str, name: str):
-    try:
-        url = f'{server.FACE_URL}/{collection}'
-        json = {'name': name}
-        r = req.put(url, json=json)
-        return r.json()
-    except Exception as ex:
-        log.info(str(ex), exc_info=True)
-        raise ErrorAPI(500, str(ex))
-
-
-def drop(collection: str):
-    try:
-        url = f'{server.FACE_URL}/{collection}'
-        r = req.delete(url)
+        headers = {
+            'api_key': api_key
+        }
+        url = f'{server.FACE_URL}/count'
+        r = req.get(url, headers=headers)
         return r.json()
     except Exception as ex:
         log.info(str(ex), exc_info=True)

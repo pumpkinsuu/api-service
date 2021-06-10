@@ -58,7 +58,9 @@ def create_admin_bp(app):
             moodle = request.form.get('moodle')
             wstoken = request.form.get('wstoken')
             key = request.form.get('key')
-            if db.get_data(moodle):
+            if db.get_by_name(name):
+                flash('Name exist!', 'warn')
+            elif db.get_data(moodle):
                 flash('Moodle exist!', 'warn')
             elif db.create(
                 name=name,
