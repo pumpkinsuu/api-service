@@ -43,9 +43,9 @@ def check_request():
     if '/api/login' in request.path:
         return
 
-    if 'token' not in request.headers:
+    if 'Authorization' not in request.headers:
         raise ErrorAPI(400, 'no token provided')
-    token = request.headers['token']
+    token = request.headers['Authorization']
     # Check token
     res = token_info(
         moodle=moodle,
