@@ -37,8 +37,8 @@ def check_request():
     data = key_db.get_data(moodle)
     if not data:
         raise ErrorAPI(400, 'invalid moodle')
-    g['key'] = data['key']
-    g['wstoken'] = data['wstoken']
+    g.key = data['key']
+    g.wstoken = data['wstoken']
 
     if '/api/login' in request.path:
         return
@@ -52,8 +52,8 @@ def check_request():
         wstoken=g['wstoken'],
         token=token
     )
-    g['username'] = res['username']
-    g['userid'] = res['userid']
+    g.username = res['username']
+    g.userid = res['userid']
 
     user = user_info(
         moodle=moodle,
