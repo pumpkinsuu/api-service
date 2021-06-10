@@ -10,7 +10,7 @@ face_bp = Blueprint('face_bp', __name__)
 
 @face_bp.route('/count', methods=['GET'])
 def count():
-    key = g['key']
+    key = g.key
     res = face_sv.count(key)
     return response(200, 'success', res)
 
@@ -18,9 +18,9 @@ def count():
 @face_bp.route('/users', methods=['GET'])
 def get_user():
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
-    key = g['key']
-    username = g['username']
+    wstoken = g.wstoken
+    key = g.key
+    username = g.username
     res = face_sv.exist(key, username)
     if 'error' in res:
         raise ErrorAPI(
@@ -43,9 +43,9 @@ def get_user():
 @face_bp.route('/users', methods=['POST', 'PUT'])
 def update_user():
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
-    key = g['key']
-    username = g['username']
+    wstoken = g.wstoken
+    key = g.key
+    username = g.username
 
     if 'front' not in request.form:
         raise ErrorAPI(400, 'missing "front"')
@@ -107,8 +107,8 @@ def update_user():
 @face_bp.route('/checkin/<roomid>', methods=['POST'])
 def check(roomid):
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
-    key = g['key']
+    wstoken = g.wstoken
+    key = g.key
 
     if 'images' not in request.json:
         raise ErrorAPI(400, 'missing "images"')
@@ -159,8 +159,8 @@ def check(roomid):
 @face_bp.route('/feedback', methods=['POST'])
 def face_feedback():
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
-    key = g['key']
+    wstoken = g.wstoken
+    key = g.key
 
     if 'image' not in request.json:
         raise ErrorAPI(400, 'missing "image"')

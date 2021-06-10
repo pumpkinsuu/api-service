@@ -39,7 +39,7 @@ def login():
 @api_bp.route('/get-student-reports', methods=['GET'])
 def get_student_log():
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
+    wstoken = g.wstoken
 
     if 'username' not in request.args:
         raise ErrorAPI(400, 'missing "username"')
@@ -62,7 +62,7 @@ def get_student_log():
 @api_bp.route('/get-reports/<courseid>', methods=['GET'])
 def get_log_by_course(courseid):
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
+    wstoken = g.wstoken
 
     reports = moodle_sv.log_by_course(
         moodle=moodle,
@@ -77,7 +77,7 @@ def get_log_by_course(courseid):
 @api_bp.route('/room-schedules', methods=['GET'])
 def room_schedule():
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
+    wstoken = g.wstoken
 
     if 'roomid' not in request.args:
         raise ErrorAPI(400, 'missing "roomid"')
@@ -100,7 +100,7 @@ def room_schedule():
 @api_bp.route('/rooms', methods=['GET'])
 def get_rooms():
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
+    wstoken = g.wstoken
 
     if 'campus' not in request.args:
         raise ErrorAPI(400, 'missing "campus"')
@@ -119,7 +119,7 @@ def get_rooms():
 @api_bp.route('/teacher-schedules', methods=['GET'])
 def get_schedules():
     moodle = request.headers['moodle']
-    userid = g['userid']
+    userid = g.userid
     token = request.headers['token']
 
     schedules = moodle_sv.schedules(
@@ -135,7 +135,7 @@ def get_schedules():
 @api_bp.route('/session/<sessionid>', methods=['GET'])
 def get_session(sessionid):
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
+    wstoken = g.wstoken
 
     session = moodle_sv.session(
         moodle=moodle,
@@ -150,7 +150,7 @@ def get_session(sessionid):
 @api_bp.route('/sessions/<courseid>', methods=['GET'])
 def get_sessions(courseid):
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
+    wstoken = g.wstoken
 
     sessions = moodle_sv.sessions(
         moodle=moodle,
@@ -165,7 +165,7 @@ def get_sessions(courseid):
 @api_bp.route('/update-attendance-log/<sessionid>', methods=['POST'])
 def manual_check(sessionid):
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
+    wstoken = g.wstoken
 
     if 'students' not in request.json:
         raise ErrorAPI(400, 'missing "students"')
@@ -187,7 +187,7 @@ def manual_check(sessionid):
 @api_bp.route('/students/<username>', methods=['GET'])
 def get_student(username):
     moodle = request.headers['moodle']
-    wstoken = g['wstoken']
+    wstoken = g.wstoken
 
     user = moodle_sv.user_info(
         moodle=moodle,
