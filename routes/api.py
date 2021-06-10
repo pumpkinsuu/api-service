@@ -120,7 +120,7 @@ def get_rooms():
 def get_schedules():
     moodle = request.headers['moodle']
     userid = g.userid
-    token = request.headers['token']
+    token = request.headers['Authorization']
 
     schedules = moodle_sv.schedules(
         moodle=moodle,
