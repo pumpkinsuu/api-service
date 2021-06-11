@@ -1,1 +1,1 @@
-gunicorn --certfile cert.pem --keyfile key.pem --workers=2 --bind 0.0.0.0:5000 wsgi:app
+gunicorn --certfile cert.pem --keyfile key.pem --workers=2 --bind 0.0.0.0:5000 wsgi:app &
