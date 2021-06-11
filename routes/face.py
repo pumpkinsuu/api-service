@@ -22,12 +22,8 @@ def get_user():
     wstoken = g.wstoken
     key = g.key
     username = g.username
-    res = face_sv.exist(key, username)
-    if 'error' in res:
-        raise ErrorAPI(
-            res['error']['code'],
-            res['error']['message']
-        )
+    if not face_sv.exist(key, username):
+        raise ErrorAPI(404, 'user not registered')
     user = {}
     data = moodle_sv.get_image(
         moodle=moodle,
@@ -66,8 +62,8 @@ def update_user():
     ):
         raise ErrorAPI(404, 'user not found')
 
-    res = face_sv.exist(key, username)
-    check_t = time()
+    exist = face_sv.exist(key, username)
+    val_t = time()
 
     user = {
         'id': username,
@@ -75,39 +71,34 @@ def update_user():
         'left': request.form['left'],
         'right': request.form['right']
     }
-    if 'error' in res:
+    if not exist:
         code = 201
         message = 'created'
-        res = face_sv.create(key, user)
+        face = face_sv.create(key, user)
     else:
         code = 200
         message = 'success'
-        res = face_sv.update(key, user)
+        face = face_sv.update(key, user)
     core_t = time()
 
-    if 'error' in res:
-        raise ErrorAPI(
-            res['error']['code'],
-            res['error']['message']
-        )
-    if code == 200 or code == 201:
-        res = moodle_sv.create_image(
-            moodle=moodle,
-            wstoken=wstoken,
-            username=user['id'],
-            image_front=user['front'],
-            image_left=user['left'],
-            image_right=user['right'],
-            replace=replace
-        )
-        if not res:
-            code = 500
-            message = 'failed to create image'
-            face_sv.remove(key, username)
+    res = moodle_sv.create_image(
+        moodle=moodle,
+        wstoken=wstoken,
+        username=user['id'],
+        image_front=user['front'],
+        image_left=user['left'],
+        image_right=user['right'],
+        replace=replace
+    )
+    if not res:
+        code = 500
+        message = 'failed to create image'
+        face_sv.remove(key, username)
 
     t = {
-        'api': check_t - g.start,
-        'core': core_t - check_t,
+        'face': face,
+        'api': val_t - g.start,
+        'core': core_t - val_t,
         'moodle': time() - core_t,
         'total': time() - g.start
     }
@@ -124,21 +115,18 @@ def check(roomid):
         raise ErrorAPI(400, 'missing "images"')
     if not isinstance(request.json['images'], list):
         raise ErrorAPI(400, '"images" type list')
-    check_t = time()
+    val_t = time()
 
-    usernames = face_sv.find(
+    data = face_sv.find(
         key,
         request.json['images']
     )
     core_t = time()
+    usernames = data['users']
 
     if not usernames:
         raise ErrorAPI(400, 'no user registered')
-    if 'error' in usernames:
-        raise ErrorAPI(
-            usernames['error']['code'],
-            usernames['error']['message']
-        )
+
     users = []
     for username in usernames:
         if not username:
@@ -167,8 +155,9 @@ def check(roomid):
         users.append(user)
 
     t = {
-        'api': check_t - g.start,
-        'core': core_t - check_t,
+        'face': data,
+        'valid': val_t - g.start,
+        'core': core_t - val_t,
         'moodle': time() - core_t,
         'total': time() - g.start
     }
@@ -194,15 +183,12 @@ def face_feedback():
     if 'description' in request.json:
         description = request.json['description']
 
-    res = face_sv.exist(
+    if not face_sv.exist(
         key,
         request.json['usertaken']
-    )
-    if 'error' in res:
-        raise ErrorAPI(
-            res['error']['code'],
-            res['error']['message']
-        )
+    ):
+        raise ErrorAPI(404, 'user not registered')
+
     moodle_sv.create_feedback(
         moodle=moodle,
         wstoken=wstoken,
