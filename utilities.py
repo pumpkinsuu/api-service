@@ -1,7 +1,6 @@
 from PIL import Image
 from base64 import b64decode
 from io import BytesIO
-import time
 import logging
 from flask import jsonify
 
@@ -9,10 +8,6 @@ from flask import jsonify
 def load_img(file):
     img = Image.open(BytesIO(b64decode(file)))
     return img
-
-
-def time_now():
-    return int(time.time())
 
 
 def logger(file):
@@ -29,11 +24,12 @@ def logger(file):
     return log
 
 
-def response(status, message, data=None):
+def response(status, message, data=None, t=None):
     return jsonify({
         'status': status,
         'message': message,
-        'data': data
+        'data': data,
+        'time': t
     }), 200
 
 

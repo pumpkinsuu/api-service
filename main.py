@@ -1,5 +1,6 @@
 from flask import Flask, request, g
 from flask_cors import CORS
+from time import time
 
 from config.server import *
 from config.moodle import ROLE
@@ -30,6 +31,8 @@ def exception(e):
 
 @app.before_request
 def check_request():
+    g.start = time()
+
     if 'moodle' not in request.headers:
         raise ErrorAPI(400, 'no moodle provided')
     moodle = request.headers['moodle']

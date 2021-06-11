@@ -19,6 +19,8 @@ class KeyData:
         self.log = logger('keyDB')
 
     def get_data(self, moodle: str):
+        if moodle[-1] == '/':
+            moodle = moodle[:-1]
         return self.db.find_one({'moodle': moodle})
 
     def get_by_name(self, name: str):

@@ -1,4 +1,5 @@
 from flask import Blueprint, request, g
+from time import time
 
 import services.face as face_sv
 import services.moodle as moodle_sv
@@ -66,6 +67,8 @@ def update_user():
         raise ErrorAPI(404, 'user not found')
 
     res = face_sv.exist(key, username)
+    check_t = time()
+
     user = {
         'id': username,
         'front': request.form['front'],
@@ -80,6 +83,7 @@ def update_user():
         code = 200
         message = 'success'
         res = face_sv.update(key, user)
+    core_t = time()
 
     if 'error' in res:
         raise ErrorAPI(
@@ -101,7 +105,13 @@ def update_user():
             message = 'failed to create image'
             face_sv.remove(key, username)
 
-    return response(code, message)
+    t = {
+        'api': check_t - g.start,
+        'core': core_t - check_t,
+        'moodle': time() - core_t,
+        'total': time() - g.start
+    }
+    return response(code, message, t=t)
 
 
 @face_bp.route('/checkin/<roomid>', methods=['POST'])
@@ -114,11 +124,14 @@ def check(roomid):
         raise ErrorAPI(400, 'missing "images"')
     if not isinstance(request.json['images'], list):
         raise ErrorAPI(400, '"images" type list')
+    check_t = time()
 
     usernames = face_sv.find(
         key,
         request.json['images']
     )
+    core_t = time()
+
     if not usernames:
         raise ErrorAPI(400, 'no user registered')
     if 'error' in usernames:
@@ -153,7 +166,13 @@ def check(roomid):
 
         users.append(user)
 
-    return response(200, 'success', users)
+    t = {
+        'api': check_t - g.start,
+        'core': core_t - check_t,
+        'moodle': time() - core_t,
+        'total': time() - g.start
+    }
+    return response(200, 'success', users, t=t)
 
 
 @face_bp.route('/feedback', methods=['POST'])
