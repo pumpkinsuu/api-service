@@ -6,12 +6,9 @@ from utilities import logger
 
 
 class KeyData:
-    def __init__(self, app=None):
+    def __init__(self, app):
         uri = MONGO_URI + KEY_DB
-        if app:
-            self.db = PyMongo(app, uri=uri).db.db
-        else:
-            self.db = MongoClient(uri).db
+        self.db = PyMongo(app, uri=uri).db.db
 
         if self.db.count_documents({}) == 0:
             self.db.create_index([('name', TEXT), ('moodle', TEXT), ('key', TEXT)], unique=True)

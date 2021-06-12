@@ -117,7 +117,7 @@ def find(api_key: str, images: list):
             err = res['error']
             raise ErrorAPI(err['code'], err['message'])
 
-        return r.json()
+        return res
     except Exception as ex:
         log.info(str(ex), exc_info=True)
         raise ErrorAPI(500, str(ex))
