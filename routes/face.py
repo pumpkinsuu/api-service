@@ -51,9 +51,9 @@ def update_user():
     if 'right' not in request.form:
         raise ErrorAPI(400, 'missing "right"')
     if 'replace' not in request.form:
-        replace = 0
-    else:
         replace = 1
+    else:
+        replace = request.form['replace']
 
     if not moodle_sv.user_info(
             moodle=moodle,
