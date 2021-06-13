@@ -10,10 +10,10 @@ def load_img(file):
     return img
 
 
-def logger(file):
+def logger():
     log = logging.getLogger()
     log.setLevel(logging.INFO)
-    file = logging.FileHandler(f'{file}.log', mode='w+')
+    file = logging.FileHandler('error.log', mode='w+')
     file.setFormatter(
         logging.Formatter(
             '[%(asctime)s] — <%(name)s>: %(message)s',

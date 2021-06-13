@@ -13,7 +13,7 @@ class KeyData:
         if self.db.count_documents({}) == 0:
             self.db.create_index([('name', TEXT), ('moodle', TEXT), ('key', TEXT)], unique=True)
 
-        self.log = logger('keyDB')
+        self.log = logger()
 
     def get_data(self, moodle: str):
         if moodle[-1] == '/':
@@ -44,7 +44,7 @@ class KeyData:
             })
             return True
         except Exception as ex:
-            self.log.info(ex, exc_info=True)
+            self.log.exception(ex)
             return False
 
     def update(self, name: str, moodle: str, wstoken: str, key: str):
@@ -63,13 +63,11 @@ class KeyData:
             )
             return True
         except Exception as ex:
-            self.log.info(ex, exc_info=True)
+            self.log.exception(ex)
             return True
 
     def remove(self, name: str):
-        try:
-            self.db.delete_one({'name': name})
-            return True
-        except Exception as ex:
-            self.log.info(ex, exc_info=True)
-            return False
+        data = {'name': name}
+        self.db.delete_one(data)
+
+        return self.db.find_one(data)

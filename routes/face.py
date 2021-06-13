@@ -5,7 +5,6 @@ import services.face as face_sv
 import services.moodle as moodle_sv
 from utilities import ErrorAPI, response
 
-
 face_bp = Blueprint('face_bp', __name__)
 
 
@@ -44,16 +43,18 @@ def update_user():
     key = g.key
     username = g.username
 
-    if 'front' not in request.form:
-        raise ErrorAPI(400, 'missing "front"')
-    if 'left' not in request.form:
-        raise ErrorAPI(400, 'missing "left"')
-    if 'right' not in request.form:
-        raise ErrorAPI(400, 'missing "right"')
-    if 'replace' not in request.form:
-        replace = 1
-    else:
-        replace = request.form['replace']
+    front = request.form.get('front')
+    if not front:
+        raise ErrorAPI(400, 'missing front')
+    left = request.form.get('left')
+    if not left:
+        raise ErrorAPI(400, 'missing left')
+    right = request.form.get('right')
+    if not right:
+        raise ErrorAPI(400, 'missing right')
+    replace = request.form.get('replace')
+    if not replace:
+        raise ErrorAPI(400, 'missing replace')
 
     if not moodle_sv.user_info(
             moodle=moodle,
@@ -67,9 +68,9 @@ def update_user():
 
     user = {
         'id': username,
-        'front': request.form['front'],
-        'left': request.form['left'],
-        'right': request.form['right']
+        'front': front,
+        'left': left,
+        'right': right
     }
     if not exist:
         code = 201
@@ -97,12 +98,27 @@ def update_user():
 
     t = {
         'face': face,
-        'api': val_t - g.start,
+        'valid': val_t - g.start,
         'core': core_t - val_t,
         'moodle': time() - core_t,
         'total': time() - g.start
     }
     return response(code, message, t=t)
+
+
+@face_bp.route('/users', methods=['DELETE'])
+def remove_user():
+    # moodle = request.headers['moodle']
+    # wstoken = g.wstoken
+    key = g.key
+    username = g.username
+    if not face_sv.exist(key, username):
+        raise ErrorAPI(404, 'user not registered')
+
+    face_sv.remove(username)
+    # moodle_sv.remove_image()
+
+    return response(200, 'success')
 
 
 @face_bp.route('/checkin/<roomid>', methods=['POST'])
@@ -164,6 +180,22 @@ def check(roomid):
     return response(200, 'success', users, t=t)
 
 
+@face_bp.route('/verify', methods=['POST'])
+def verify():
+    key = g.key
+
+    image1 = request.form.get('image1')
+    if not image1:
+        raise ErrorAPI(400, 'missing image1')
+    image2 = request.form.get('image1')
+    if not image2:
+        raise ErrorAPI(400, 'missing image2')
+
+    isIdentical = face_sv.verify(key, image1, image2)
+
+    return response(200, 'success', {'isIdentical': isIdentical})
+
+
 @face_bp.route('/feedback', methods=['POST'])
 def face_feedback():
     moodle = request.headers['moodle']
@@ -184,8 +216,8 @@ def face_feedback():
         description = request.json['description']
 
     if not face_sv.exist(
-        key,
-        request.json['usertaken']
+            key,
+            request.json['usertaken']
     ):
         raise ErrorAPI(404, 'user not registered')
 

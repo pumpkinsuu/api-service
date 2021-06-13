@@ -19,8 +19,8 @@ def error_api(e: ErrorAPI):
 
 @app.errorhandler(Exception)
 def exception(e):
-    log.info(str(e), exc_info=True)
-    return response(500, str(e))
+    log.exception()
+    return response(500, e)
 
 
 admin_bp = create_admin_bp(app)
