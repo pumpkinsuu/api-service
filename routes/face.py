@@ -121,6 +121,24 @@ def remove_user():
     return response(200, 'success')
 
 
+@face_bp.route('/users/verify', methods=['POST'])
+def verify():
+    key = g.key
+    username = g.username
+    if not face_sv.exist(key, username):
+        raise ErrorAPI(404, 'user not registered')
+
+    if 'images' not in request.json:
+        raise ErrorAPI(400, 'missing "images"')
+    images = request.json['images']
+    if not isinstance(images, list):
+        raise ErrorAPI(400, 'images not list')
+
+    isIdentical = face_sv.verify(key, username, images)
+
+    return response(200, 'success', {'isIdentical': isIdentical})
+
+
 @face_bp.route('/checkin/<roomid>', methods=['POST'])
 def check(roomid):
     moodle = request.headers['moodle']
@@ -129,13 +147,14 @@ def check(roomid):
 
     if 'images' not in request.json:
         raise ErrorAPI(400, 'missing "images"')
-    if not isinstance(request.json['images'], list):
-        raise ErrorAPI(400, '"images" type list')
+    images = request.json['images']
+    if not isinstance(images, list):
+        raise ErrorAPI(400, 'images not list')
     val_t = time()
 
     data = face_sv.find(
         key,
-        request.json['images']
+        images
     )
     core_t = time()
     usernames = data['users']
@@ -178,22 +197,6 @@ def check(roomid):
         'total': time() - g.start
     }
     return response(200, 'success', users, t=t)
-
-
-@face_bp.route('/verify', methods=['POST'])
-def verify():
-    key = g.key
-
-    image1 = request.form.get('image1')
-    if not image1:
-        raise ErrorAPI(400, 'missing image1')
-    image2 = request.form.get('image1')
-    if not image2:
-        raise ErrorAPI(400, 'missing image2')
-
-    isIdentical = face_sv.verify(key, image1, image2)
-
-    return response(200, 'success', {'isIdentical': isIdentical})
 
 
 @face_bp.route('/feedback', methods=['POST'])

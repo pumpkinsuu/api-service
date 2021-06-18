@@ -97,14 +97,14 @@ def find(api_key: str, images: list):
     return res
 
 
-def verify(api_key: str, image1, image2):
+def verify(api_key: str, userID, images):
     headers = {
         'api_key': api_key
     }
     url = f'{server.FACE_URL}/verify'
     data = {
-        'image1': image1,
-        'image2': image2
+        'userID': userID,
+        'images': images
     }
     r = req.post(url, data=data, headers=headers)
 
