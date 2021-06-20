@@ -76,7 +76,7 @@ def login(moodle, username, password):
     res = res_handle(r)
 
     if 'status' in res:
-        if res['message'] == 'invalidlogin':
+        if 'token' in res['message']:
             raise ErrorAPI(401, 'wrong username or password', 'moodle')
         raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res['token']
