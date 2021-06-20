@@ -2,8 +2,7 @@ import requests as req
 
 from config import server
 
-from utilities import logger, ErrorAPI
-log = logger()
+from utilities import ErrorAPI
 
 
 def users(api_key: str):

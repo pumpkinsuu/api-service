@@ -19,7 +19,7 @@ def error_api(e: ErrorAPI):
 
 @app.errorhandler(Exception)
 def exception(e):
-    log.exception()
+    log.exception(e)
     return response(500, e)
 
 
