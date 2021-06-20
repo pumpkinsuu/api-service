@@ -3,7 +3,7 @@ import requests as req
 from config import server
 
 from utilities import logger, ErrorAPI
-log = logger('face')
+log = logger()
 
 
 def users(api_key: str):
