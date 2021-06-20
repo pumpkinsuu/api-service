@@ -60,7 +60,7 @@ def token_info(moodle, token):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], __name__ + res['message'])
+        raise ErrorAPI(res['status'], 'moodle: ' + res['message'])
     return res
 
 
