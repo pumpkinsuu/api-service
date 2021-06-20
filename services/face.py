@@ -16,7 +16,7 @@ def users(api_key: str):
     res = r.json()
     if 'error' in res:
         err = res['error']
-        raise ErrorAPI(err['code'], err['message'])
+        raise ErrorAPI(err['code'], __name__ + err['message'])
 
     return res['users']
 
