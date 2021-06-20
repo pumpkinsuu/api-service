@@ -1,4 +1,4 @@
-from pymongo import MongoClient, TEXT, ASCENDING
+from pymongo import TEXT, ASCENDING
 from flask_pymongo import PyMongo
 
 from config.server import MONGO_URI, KEY_DB
