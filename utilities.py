@@ -24,20 +24,22 @@ def logger():
     return log
 
 
-def response(status, message, data=None, t=None):
+def response(status, message, data=None, service='api', t=None):
     return jsonify({
         'status': status,
         'message': message,
         'data': data,
+        'service': service,
         'time': t
     }), 200
 
 
 class ErrorAPI(Exception):
-    def __init__(self, status, message):
+    def __init__(self, status, message, service='api'):
         super().__init__()
         self.status = status
         self.message = message
+        self.service = service
 
     def detail(self):
-        return response(self.status, self.message)
+        return response(self.status, self.message, service=self.service)

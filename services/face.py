@@ -16,7 +16,7 @@ def users(api_key: str):
     res = r.json()
     if 'error' in res:
         err = res['error']
-        raise ErrorAPI(err['code'], __name__ + err['message'])
+        raise ErrorAPI(err['code'], err['message'], 'face')
 
     return res['users']
 
@@ -31,7 +31,7 @@ def exist(api_key: str, userID: str):
     res = r.json()
     if 'error' in res:
         err = res['error']
-        raise ErrorAPI(err['code'], err['message'])
+        raise ErrorAPI(err['code'], err['message'], 'face')
 
     return res['status']
 
@@ -46,7 +46,7 @@ def create(api_key: str, user: dict):
     res = r.json()
     if 'error' in res:
         err = res['error']
-        raise ErrorAPI(err['code'], err['message'])
+        raise ErrorAPI(err['code'], err['message'], 'face')
 
     return res
 
@@ -61,7 +61,7 @@ def update(api_key: str, user: dict):
     res = r.json()
     if 'error' in res:
         err = res['error']
-        raise ErrorAPI(err['code'], err['message'])
+        raise ErrorAPI(err['code'], err['message'], 'face')
 
     return res
 
@@ -76,7 +76,7 @@ def remove(api_key: str, userID):
     res = r.json()
     if 'error' in res:
         err = res['error']
-        raise ErrorAPI(err['code'], err['message'])
+        raise ErrorAPI(err['code'], err['message'], 'face')
 
 
 def find(api_key: str, images: list):
@@ -92,7 +92,7 @@ def find(api_key: str, images: list):
     res = r.json()
     if 'error' in res:
         err = res['error']
-        raise ErrorAPI(err['code'], err['message'])
+        raise ErrorAPI(err['code'], err['message'], 'face')
 
     return res
 
@@ -111,7 +111,7 @@ def verify(api_key: str, userID, images):
     res = r.json()
     if 'error' in res:
         err = res['error']
-        raise ErrorAPI(err['code'], err['message'])
+        raise ErrorAPI(err['code'], err['message'], 'face')
 
     return res['result']
 
@@ -126,6 +126,6 @@ def count(api_key: str):
     res = r.json()
     if 'error' in res:
         err = res['error']
-        raise ErrorAPI(err['code'], err['message'])
+        raise ErrorAPI(err['code'], err['message'], 'face')
 
     return res['total']

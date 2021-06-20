@@ -10,11 +10,11 @@ log = logger('moodle')
 def res_handle(r):
     if r.status_code != 200:
         log.info(r.status_code, exc_info=True)
-        raise ErrorAPI(500, r.status_code)
+        raise ErrorAPI(500, r.status_code, 'moodle')
 
     if 'application/json' not in r.headers['content-type']:
         log.info(r.headers['content-type'], exc_info=True)
-        raise ErrorAPI(500, 'incorrect moodle content-type')
+        raise ErrorAPI(500, 'incorrect content-type', 'moodle')
 
     res = r.json()
     if 'errorcode' in res and res['errorcode']:
@@ -43,7 +43,7 @@ def user_info(moodle, wstoken, username):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     if res and isinstance(res, list):
         return res[0]
     return {}
@@ -60,7 +60,7 @@ def token_info(moodle, token):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], 'moodle: ' + res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -77,8 +77,8 @@ def login(moodle, username, password):
 
     if 'status' in res:
         if res['message'] == 'invalidlogin':
-            raise ErrorAPI(401, 'wrong username or password')
-        raise ErrorAPI(res['status'], res['message'])
+            raise ErrorAPI(401, 'wrong username or password', 'moodle')
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res['token']
 
 
@@ -96,7 +96,7 @@ def update_log(moodle, wstoken, sessionid, username, statusid):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -126,7 +126,7 @@ def room_schedule(moodle, wstoken, roomid, date):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -142,7 +142,7 @@ def session(moodle, wstoken, sessionid):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -158,7 +158,7 @@ def sessions(moodle, wstoken, courseid):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -174,7 +174,7 @@ def reports(moodle, wstoken, attendanceid):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -191,7 +191,7 @@ def student_log(moodle, wstoken, username, courseid):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -207,7 +207,7 @@ def log_by_course(moodle, wstoken, courseid):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -223,7 +223,7 @@ def room_by_campus(moodle, wstoken, campus):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -239,7 +239,7 @@ def schedules(moodle, token, userid):
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -265,7 +265,7 @@ def create_feedback(moodle,
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -291,7 +291,7 @@ def create_image(moodle,
     res = res_handle(r)
 
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     return res
 
 
@@ -307,9 +307,9 @@ def get_image(moodle, wstoken, username):
     res = res_handle(r)
 
     if not res:
-        raise ErrorAPI(404, 'images not found')
+        raise ErrorAPI(404, 'images not found', 'moodle')
     if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'])
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
     if isinstance(res, list):
         return res[0]
     return res
