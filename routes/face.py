@@ -128,15 +128,22 @@ def verify():
     if not face_sv.exist(key, username):
         raise ErrorAPI(404, 'user not registered')
 
+    if 'sessionid' not in request.json:
+        raise ErrorAPI(400, 'missing sessionid')
+    sessionid = request.json['sessionid']
+
     if 'images' not in request.json:
         raise ErrorAPI(400, 'missing "images"')
     images = request.json['images']
     if not isinstance(images, list):
         raise ErrorAPI(400, 'images not list')
 
-    isIdentical = face_sv.verify(key, username, images)
+    if not face_sv.verify(key, username, images):
+        raise ErrorAPI(400, 'difference person')
 
-    return response(200, 'success', {'isIdentical': isIdentical})
+    # moodle
+
+    return response(200, 'success')
 
 
 @face_bp.route('/checkin/<roomid>', methods=['POST'])
