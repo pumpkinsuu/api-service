@@ -128,15 +128,13 @@ def verify():
     if not face_sv.exist(key, username):
         raise ErrorAPI(404, 'user not registered')
 
-    if 'sessionid' not in request.json:
+    sessionid = request.form.get('sessionid')
+    if not sessionid:
         raise ErrorAPI(400, 'missing sessionid')
-    sessionid = request.json['sessionid']
 
-    if 'images' not in request.json:
-        raise ErrorAPI(400, 'missing "images"')
-    images = request.json['images']
-    if not isinstance(images, list):
-        raise ErrorAPI(400, 'images not list')
+    images = request.form.getlist('images')
+    if not images:
+        raise ErrorAPI(400, 'missing images')
 
     if not face_sv.verify(key, username, images):
         raise ErrorAPI(400, 'difference person')
@@ -153,7 +151,7 @@ def check(roomid):
     key = g.key
 
     if 'images' not in request.json:
-        raise ErrorAPI(400, 'missing "images"')
+        raise ErrorAPI(400, 'missing images')
     images = request.json['images']
     if not isinstance(images, list):
         raise ErrorAPI(400, 'images not list')
@@ -213,13 +211,13 @@ def face_feedback():
     key = g.key
 
     if 'image' not in request.json:
-        raise ErrorAPI(400, 'missing "image"')
+        raise ErrorAPI(400, 'missing image')
     if 'roomid' not in request.json:
-        raise ErrorAPI(400, 'missing "roomid"')
+        raise ErrorAPI(400, 'missing roomid')
     if 'usertaken' not in request.json:
-        raise ErrorAPI(400, 'missing "usertaken"')
+        raise ErrorAPI(400, 'missing usertaken')
     if 'userbetaken' not in request.json:
-        raise ErrorAPI(400, 'missing "userbetaken"')
+        raise ErrorAPI(400, 'missing userbetaken')
 
     description = 'mistaken in face recognition'
     if 'description' in request.json:
