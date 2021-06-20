@@ -9,7 +9,7 @@ from routes.face import face_bp
 from routes.api import api_bp
 from services.moodle import token_info, user_info
 from utilities import ErrorAPI, response, logger
-log = logger('error')
+log = logger()
 
 app = Flask(__name__)
 CORS(app)
