@@ -131,12 +131,17 @@ def verify():
     sessionid = request.form.get('sessionid')
     if not sessionid:
         raise ErrorAPI(400, 'missing sessionid')
+    front = request.form.get('front')
+    if not front:
+        raise ErrorAPI(400, 'missing front')
+    left = request.form.get('left')
+    if not front:
+        raise ErrorAPI(400, 'missing left')
+    right = request.form.get('right')
+    if not front:
+        raise ErrorAPI(400, 'missing right')
 
-    images = request.form.getlist('images')
-    if not images:
-        raise ErrorAPI(400, 'missing images')
-
-    if not face_sv.verify(key, username, images):
+    if not face_sv.verify(key, username, [front, left, right]):
         raise ErrorAPI(400, 'difference person')
 
     # moodle
