@@ -18,6 +18,8 @@ def res_handle(r):
 
     res = r.json()
     if 'errorcode' in res and res['errorcode']:
+        if res['errorcode'] == 'invalidtoken':
+            raise ErrorAPI(400, 'token expired', 'moodle')
         err = {
             'status': 500,
             'message': res['errorcode']
