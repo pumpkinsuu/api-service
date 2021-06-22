@@ -115,7 +115,7 @@ def remove_user():
     if not face_sv.exist(key, username):
         raise ErrorAPI(404, 'user not registered')
 
-    face_sv.remove(username)
+    face_sv.remove(key, username)
     # moodle_sv.remove_image()
 
     return response(200, 'success')
