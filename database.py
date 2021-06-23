@@ -23,6 +23,9 @@ class KeyData:
     def get_by_name(self, name: str):
         return self.db.find_one({'name': name})
 
+    def get_by_key(self, key: str):
+        return self.db.find_one({'key': key})
+
     def get(self):
         results = self.db.find().sort([("collection", ASCENDING)])
         return list(results)

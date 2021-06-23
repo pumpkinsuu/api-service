@@ -71,6 +71,8 @@ def create_admin_bp(app):
                 flash('Name exist!', 'warn')
             elif db.get_data(moodle):
                 flash('Moodle exist!', 'warn')
+            elif db.get_by_key(key):
+                flash('API Key exist!', 'warn')
             elif db.create(
                 name=name,
                 moodle=moodle,
