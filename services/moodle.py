@@ -343,7 +343,6 @@ def verify(
 
     if 'status' in res:
         raise ErrorAPI(res['status'], res['message'], 'moodle')
-    return res
 
 
 def get_campus(moodle, wstoken):
@@ -358,3 +357,5 @@ def get_campus(moodle, wstoken):
 
     if 'status' in res:
         raise ErrorAPI(res['status'], res['message'], 'moodle')
+
+    return res
