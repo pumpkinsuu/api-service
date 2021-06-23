@@ -92,7 +92,12 @@ def create_admin_bp(app):
             moodle = request.form.get('moodle')
             wstoken = request.form.get('wstoken')
             key = request.form.get('key')
-            if db.update(
+
+            if db.get_data(moodle):
+                flash('Moodle exist!', 'warn')
+            elif db.get_by_key(key):
+                flash('API Key exist!', 'warn')
+            elif db.update(
                 name=name,
                 moodle=moodle,
                 wstoken=wstoken,
