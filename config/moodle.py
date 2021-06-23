@@ -8,7 +8,9 @@ GET_LOG_BY_COURSE = 'local_webservices_get_logs_by_course_id'
 
 UPDATE_LOG = 'local_webservices_update_log'
 CHECKIN = 'local_webservices_checkin'
+CHECKIN_ONLINE = 'local_webservices_checkin_online'
 
+GET_CAMPUS = 'local_webservices_get_campus'
 ROOM_SCHEDULE = 'local_webservices_get_schedules'
 ROOM_BY_CAMPUS = 'local_webservices_get_rooms'
 

@@ -201,14 +201,9 @@ def get_student(username):
 
 @api_bp.route('/campus', methods=['GET'])
 def get_campus():
-    campus = [
-            {
-                'id': 'NVC',
-                'name': 'Nguyễn Văn Cừ'
-            },
-            {
-                'id': 'LT',
-                'name': 'Linh Trung'
-            }
-    ]
+    moodle = request.headers['moodle']
+    wstoken = g.wstoken
+
+    result = moodle_sv.get_campus(moodle, wstoken)
+    campus = [{'id': x['campus']} for x in result]
     return response(200, 'success', campus)

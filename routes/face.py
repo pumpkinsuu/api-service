@@ -108,21 +108,20 @@ def update_user():
 
 @face_bp.route('/users', methods=['DELETE'])
 def remove_user():
-    # moodle = request.headers['moodle']
-    # wstoken = g.wstoken
     key = g.key
     username = g.username
     if not face_sv.exist(key, username):
         raise ErrorAPI(404, 'user not registered')
 
     face_sv.remove(key, username)
-    # moodle_sv.remove_image()
 
     return response(200, 'success')
 
 
 @face_bp.route('/users/verify', methods=['POST'])
 def verify():
+    moodle = request.headers['moodle']
+    wstoken = g.wstoken
     key = g.key
     username = g.username
     if not face_sv.exist(key, username):
@@ -141,12 +140,19 @@ def verify():
     if not front:
         raise ErrorAPI(400, 'missing right')
 
-    if not face_sv.verify(key, username, [front, left, right]):
-        raise ErrorAPI(400, 'difference person')
+    result = face_sv.verify(key, username, [front, left, right])
+    m_res = moodle_sv.verify(
+        moodle=moodle,
+        wstoken=wstoken,
+        username=username,
+        sessionid=sessionid,
+        image_front=front,
+        image_left=left,
+        image_right=right,
+        result=result
+    )
 
-    # moodle
-
-    return response(200, 'success')
+    return response(200, 'success', m_res)
 
 
 @face_bp.route('/checkin/<roomid>', methods=['POST'])

@@ -315,3 +315,47 @@ def get_image(moodle, wstoken, username):
     if isinstance(res, list):
         return res[0]
     return res
+
+
+def verify(
+        moodle,
+        wstoken,
+        username,
+        sessionid,
+        image_front,
+        image_left,
+        image_right,
+        result):
+    url = f'{moodle}/webservice/rest/server.php'
+    data = {
+        'moodlewsrestformat': 'json',
+        'wstoken': wstoken,
+        'wsfunction': CHECKIN_ONLINE,
+        'username': username,
+        'sessionid': sessionid,
+        'image_front': image_front,
+        'image_left': image_left,
+        'image_right': image_right,
+        'result': result
+    }
+    r = req.post(url, data=data)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
+    return res
+
+
+def get_campus(moodle, wstoken):
+    url = f'{moodle}/webservice/rest/server.php'
+    params = {
+        'moodlewsrestformat': 'json',
+        'wstoken': wstoken,
+        'wsfunction': GET_CAMPUS,
+    }
+    r = req.get(url, params=params)
+    res = res_handle(r)
+
+    if 'status' in res:
+        raise ErrorAPI(res['status'], res['message'], 'moodle')
+    return res
