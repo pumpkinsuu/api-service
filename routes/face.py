@@ -152,7 +152,7 @@ def verify():
         result=int(result)
     )
     if not result:
-        raise ErrorAPI(400, 'faces not registered')
+        raise ErrorAPI(400, 'invalid faces')
 
     return response(200, 'success')
 
