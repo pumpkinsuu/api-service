@@ -12,6 +12,11 @@ def create_admin_bp(app):
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.login_view = 'admin_bp.login'
+    login_manager.refresh_view = "admin_bp.login"
+    login_manager.needs_refresh_message = (
+        u"Session expired, please login again."
+    )
+    login_manager.needs_refresh_message_category = "warn"
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -35,7 +40,7 @@ def create_admin_bp(app):
                 user = User(USERNAME)
                 login_user(user)
                 return redirect(url_for('admin_bp.main'))
-            flash('Invalid username or password', 'warn')
+            flash('Invalid username or password!', 'warn')
 
         return render_template('loginPage.html')
 
@@ -72,10 +77,10 @@ def create_admin_bp(app):
                 wstoken=wstoken,
                 key=key
             ):
-                flash('Created', 'info')
+                flash('Success!', 'info')
                 return redirect(url_for('admin_bp.update', name=name))
             else:
-                flash('Failed to create', 'error')
+                flash('Failed to create!', 'error')
         return render_template('addPage.html')
 
     @admin_bp.route('/moodle/<name>', methods=['GET', 'POST'])
@@ -91,9 +96,9 @@ def create_admin_bp(app):
                 wstoken=wstoken,
                 key=key
             ):
-                flash('Updated', 'info')
+                flash('Updated!', 'info')
             else:
-                flash('Failed to update', 'error')
+                flash('Failed to update!', 'error')
 
         data = db.get_by_name(name)
         if not data:
@@ -104,10 +109,10 @@ def create_admin_bp(app):
     @login_required
     def remove(name):
         if db.remove(name):
-            flash('Removed', 'info')
+            flash(f'Removed {name}!', 'info')
             return redirect(url_for('admin_bp.main'))
         else:
-            flash('Failed to remove', 'error')
+            flash('Failed to remove!', 'error')
             return redirect(url_for('admin_bp.update', name=name))
 
     @admin_bp.route('/search')

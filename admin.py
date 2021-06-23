@@ -1,5 +1,6 @@
-from flask import Flask
+from flask import Flask, session
 from flask_cors import CORS
+from datetime import timedelta
 
 from config.admin import *
 
@@ -21,6 +22,12 @@ def error_api(e: ErrorAPI):
 def exception(e):
     log.exception(e)
     return response(500, e)
+
+
+@app.before_request
+def before_request():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(hours=1)
 
 
 admin_bp = create_admin_bp(app)
