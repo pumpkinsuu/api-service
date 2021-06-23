@@ -141,7 +141,7 @@ def verify():
         raise ErrorAPI(400, 'missing right')
 
     result = face_sv.verify(key, username, [front, left, right])
-    m_res = moodle_sv.verify(
+    moodle_sv.verify(
         moodle=moodle,
         wstoken=wstoken,
         username=username,
@@ -151,8 +151,10 @@ def verify():
         image_right=right,
         result=int(result)
     )
+    if not result:
+        raise ErrorAPI(400, 'faces not registered')
 
-    return response(200, 'success', m_res)
+    return response(200, 'success')
 
 
 @face_bp.route('/checkin/<roomid>', methods=['POST'])
