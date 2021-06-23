@@ -149,7 +149,7 @@ def verify():
         image_front=front,
         image_left=left,
         image_right=right,
-        result=result
+        result=int(result)
     )
 
     return response(200, 'success', m_res)
