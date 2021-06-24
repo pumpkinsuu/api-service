@@ -157,7 +157,7 @@ def verify():
     return response(200, 'success')
 
 
-@face_bp.route('/find/', methods=['POST'])
+@face_bp.route('/find', methods=['POST'])
 def find():
     moodle = request.headers['moodle']
     wstoken = g.wstoken
