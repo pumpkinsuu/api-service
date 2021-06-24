@@ -157,8 +157,8 @@ def verify():
     return response(200, 'success')
 
 
-@face_bp.route('/checkin/<roomid>', methods=['POST'])
-def check(roomid):
+@face_bp.route('/find/', methods=['POST'])
+def find():
     moodle = request.headers['moodle']
     wstoken = g.wstoken
     key = g.key
@@ -185,7 +185,7 @@ def check(roomid):
         if not username:
             users.append({
                 'status': 404,
-                'message': 'face not registered'
+                'message': 'not registered'
             })
             continue
 
@@ -195,7 +195,7 @@ def check(roomid):
             username=username
         )
         user['status'] = 200
-        user['message'] = 'success'
+        user['message'] = 'registered'
         users.append(user)
 
     t = {

@@ -221,6 +221,7 @@ def checkin(roomid):
     users = []
     for username in usernames:
         user = {
+            'username': username,
             'status': 200
         }
         res = moodle_sv.checkin(
