@@ -195,16 +195,7 @@ def check(roomid):
             username=username
         )
         user['status'] = 200
-        res = moodle_sv.checkin(
-            moodle=moodle,
-            wstoken=wstoken,
-            roomid=roomid,
-            username=username
-        )
-        if 'status' in res:
-            user['status'] = res['status']
-        user['message'] = res['message']
-
+        user['message'] = 'success'
         users.append(user)
 
     t = {

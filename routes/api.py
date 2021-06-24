@@ -207,3 +207,31 @@ def get_campus():
     result = moodle_sv.get_campus(moodle, wstoken)
     campus = [{'id': x['campus']} for x in result]
     return response(200, 'success', campus)
+
+
+@api_bp.route('/checkin/<roomid>', methods=['POST'])
+def checkin(roomid):
+    moodle = request.headers['moodle']
+    wstoken = g.wstoken
+
+    if 'usernames' not in request.json:
+        raise ErrorAPI(400, 'missing usernames')
+    usernames = request.json['usernames']
+
+    users = []
+    for username in usernames:
+        user = {
+            'status': 200
+        }
+        res = moodle_sv.checkin(
+            moodle=moodle,
+            wstoken=wstoken,
+            roomid=roomid,
+            username=username
+        )
+        if 'status' in res:
+            user['status'] = res['status']
+        user['message'] = res['message']
+        users.append(user)
+
+    return response(200, 'success', users)
