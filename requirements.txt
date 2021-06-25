@@ -1,5 +1,5 @@
 flask
 flask_cors
+flask-login
 pymongo
 pymongo[srv]
-numpy
