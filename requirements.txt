@@ -6,3 +6,4 @@ flask-login
 pymongo
 pymongo[srv]
 pillow
+requests
