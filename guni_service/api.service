@@ -7,7 +7,7 @@ User=pumpk
 Group=www-data
 WorkingDirectory=/home/pumpk/api-service
 Environment="PATH=/home/pumpk/env/bin"
-ExecStart=/home/pumpk/env/bin/gunicorn --workers 2 --bind 0.0.0.0:5000 wsgi:app
+ExecStart=/home/pumpk/env/bin/gunicorn --workers 3 --bind 0.0.0.0:5000 wsgi:app
 
 [Install]
 WantedBy=multi-user.target
