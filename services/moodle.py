@@ -44,6 +44,9 @@ def user_info(moodle, wstoken, username):
     r = req.get(url, params=params)
     res = res_handle(r)
 
+    if 'errorcode' in res:
+        if res['errorcode'] == 'invalidtoken':
+            raise ErrorAPI(401, 'invalid wstoken', 'moodle')
     if 'status' in res:
         raise ErrorAPI(res['status'], res['message'], 'moodle')
     if res and isinstance(res, list):
