@@ -19,7 +19,7 @@ def res_handle(r):
     res = r.json()
     if 'errorcode' in res and res['errorcode']:
         if res['errorcode'] == 'invalidtoken':
-            raise ErrorAPI(401, 'invalid/expired token', 'moodle')
+            raise ErrorAPI(401, 'invalid wstoken', 'moodle')
         err = {
             'status': 500,
             'message': res['errorcode']
@@ -44,9 +44,6 @@ def user_info(moodle, wstoken, username):
     r = req.get(url, params=params)
     res = res_handle(r)
 
-    if 'errorcode' in res:
-        if res['errorcode'] == 'invalidtoken':
-            raise ErrorAPI(401, 'invalid wstoken', 'moodle')
     if 'status' in res:
         raise ErrorAPI(res['status'], res['message'], 'moodle')
     if res and isinstance(res, list):
@@ -63,6 +60,10 @@ def token_info(moodle, token):
     }
     r = req.get(url, params=params)
     res = res_handle(r)
+
+    if 'errorcode' in res and res['errorcode']:
+        if res['errorcode'] == 'invalidtoken':
+            raise ErrorAPI(401, 'invalid/expired token', 'moodle')
 
     if 'status' in res:
         raise ErrorAPI(res['status'], res['message'], 'moodle')
@@ -360,5 +361,4 @@ def get_campus(moodle, wstoken):
 
     if 'status' in res:
         raise ErrorAPI(res['status'], res['message'], 'moodle')
-
     return res
