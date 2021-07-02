@@ -1,2 +1,4 @@
 # api-service
-Require: face-service
+Require:  
+* face-service
+* moodle
