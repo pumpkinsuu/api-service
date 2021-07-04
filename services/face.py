@@ -5,9 +5,9 @@ from config import server
 from utilities import ErrorAPI
 
 
-def users(api_key: str):
+def users(Authorization: str):
     headers = {
-        'api_key': api_key
+        'Authorization': Authorization
     }
     url = f'{server.FACE_URL}/users'
     r = req.get(url, headers=headers)
@@ -20,9 +20,9 @@ def users(api_key: str):
     return res['users']
 
 
-def exist(api_key: str, userID: str):
+def exist(Authorization: str, userID: str):
     headers = {
-        'api_key': api_key
+        'Authorization': Authorization
     }
     url = f'{server.FACE_URL}/users/{userID}'
     r = req.get(url, headers=headers)
@@ -35,9 +35,9 @@ def exist(api_key: str, userID: str):
     return res['status']
 
 
-def create(api_key: str, user: dict):
+def create(Authorization: str, user: dict):
     headers = {
-        'api_key': api_key
+        'Authorization': Authorization
     }
     url = f'{server.FACE_URL}/users/{user["id"]}'
     r = req.post(url, data=user, headers=headers)
@@ -50,9 +50,9 @@ def create(api_key: str, user: dict):
     return res
 
 
-def update(api_key: str, user: dict):
+def update(Authorization: str, user: dict):
     headers = {
-        'api_key': api_key
+        'Authorization': Authorization
     }
     url = f'{server.FACE_URL}/users/{user["id"]}'
     r = req.put(url, data=user, headers=headers)
@@ -65,9 +65,9 @@ def update(api_key: str, user: dict):
     return res
 
 
-def remove(api_key: str, userID):
+def remove(Authorization: str, userID):
     headers = {
-        'api_key': api_key
+        'Authorization': Authorization
     }
     url = f'{server.FACE_URL}/users/{userID}'
     r = req.delete(url, headers=headers)
@@ -78,9 +78,9 @@ def remove(api_key: str, userID):
         raise ErrorAPI(err['code'], err['message'], 'face')
 
 
-def find(api_key: str, images: list):
+def find(Authorization: str, images: list):
     headers = {
-        'api_key': api_key
+        'Authorization': Authorization
     }
     url = f'{server.FACE_URL}/find'
     data = {
@@ -96,9 +96,9 @@ def find(api_key: str, images: list):
     return res
 
 
-def verify(api_key: str, userID, images):
+def verify(Authorization: str, userID, images):
     headers = {
-        'api_key': api_key
+        'Authorization': Authorization
     }
     url = f'{server.FACE_URL}/verify'
     data = {
@@ -115,9 +115,9 @@ def verify(api_key: str, userID, images):
     return res['result']
 
 
-def count(api_key: str):
+def count(Authorization: str):
     headers = {
-        'api_key': api_key
+        'Authorization': Authorization
     }
     url = f'{server.FACE_URL}/count'
     r = req.get(url, headers=headers)
