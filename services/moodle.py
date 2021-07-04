@@ -304,8 +304,6 @@ def create_feedback(moodle,
             err['message'] = res['message']
         raise ErrorAPI(err['status'], err['message'], 'moodle')
 
-    return res
-
 
 def create_image(moodle,
                  wstoken,
