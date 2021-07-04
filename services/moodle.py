@@ -271,7 +271,7 @@ def create_feedback(moodle,
                     description,
                     image):
     url = f'{moodle}/webservice/rest/server.php'
-    params = {
+    data = {
         'moodlewsrestformat': 'json',
         'wstoken': wstoken,
         'wsfunction': CREATE_FEEDBACK,
@@ -281,7 +281,7 @@ def create_feedback(moodle,
         'description': description,
         'image': image
     }
-    r = req.post(url, params=params)
+    r = req.post(url, data=data)
     if r.status_code != 200:
         log.info(r.status_code, exc_info=True)
         raise ErrorAPI(r.status_code, r.text, 'moodle')
