@@ -59,14 +59,28 @@ def token_info(moodle, token):
         'wsfunction': TOKEN_INFO
     }
     r = req.get(url, params=params)
-    res = res_handle(r)
+    if r.status_code != 200:
+        log.info(r.status_code, exc_info=True)
+        raise ErrorAPI(r.status_code, r.text, 'moodle')
+
+    if 'application/json' not in r.headers['content-type']:
+        log.info(r.headers['content-type'], exc_info=True)
+        raise ErrorAPI(500, 'incorrect content-type', 'moodle')
+
+    res = r.json()
 
     if 'errorcode' in res and res['errorcode']:
         if res['errorcode'] == 'invalidtoken':
             raise ErrorAPI(401, 'invalid/expired token', 'moodle')
-
-    if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'], 'moodle')
+        err = {
+            'status': 500,
+            'message': res['errorcode']
+        }
+        if res['errorcode'].isnumeric():
+            err['status'] = int(res['errorcode'])
+        if 'message' in res:
+            err['message'] = res['message']
+        return err
     return res
 
 
@@ -268,10 +282,28 @@ def create_feedback(moodle,
         'image': image
     }
     r = req.post(url, params=params)
-    res = res_handle(r)
+    if r.status_code != 200:
+        log.info(r.status_code, exc_info=True)
+        raise ErrorAPI(r.status_code, r.text, 'moodle')
 
-    if 'status' in res:
-        raise ErrorAPI(res['status'], res['message'], 'moodle')
+    if 'application/json' not in r.headers['content-type']:
+        return
+
+    res = r.json()
+
+    if 'errorcode' in res and res['errorcode']:
+        if res['errorcode'] == 'invalidtoken':
+            raise ErrorAPI(401, 'invalid/expired token', 'moodle')
+        err = {
+            'status': 500,
+            'message': res['errorcode']
+        }
+        if res['errorcode'].isnumeric():
+            err['status'] = int(res['errorcode'])
+        if 'message' in res:
+            err['message'] = res['message']
+        raise ErrorAPI(err['status'], err['message'], 'moodle')
+
     return res
 
 
