@@ -48,7 +48,7 @@ def check_request():
     g.key = data['key']
     g.wstoken = data['wstoken']
 
-    if '/api/login' in request.path:
+    if '/api/login' == request.path:
         return
 
     if 'Authorization' not in request.headers:
@@ -70,7 +70,7 @@ def check_request():
     if not user:
         raise ErrorAPI(404, 'userinfo not found')
     # Check role
-    if USER_ROUTES in request.path:
+    if request.path in USER_ROUTES:
         return
     if user['isadmin']:
         return

@@ -116,7 +116,7 @@ def get_rooms():
     return response(200, 'success', rooms)
 
 
-@api_bp.route('/teacher-schedules', methods=['GET'])
+@api_bp.route('/schedules', methods=['GET'])
 def get_schedules():
     moodle = request.headers['moodle']
     userid = g.userid
