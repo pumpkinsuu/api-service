@@ -10,7 +10,7 @@ log = logger()
 def res_handle(r):
     if r.status_code != 200:
         log.info(r.status_code, exc_info=True)
-        raise ErrorAPI(500, r.status_code, 'moodle')
+        raise ErrorAPI(500, r.text, 'moodle')
 
     if 'application/json' not in r.headers['content-type']:
         log.info(r.headers['content-type'], exc_info=True)
