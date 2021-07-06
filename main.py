@@ -20,6 +20,7 @@ key_db = KeyData(app)
 
 @app.errorhandler(ErrorAPI)
 def error_api(e: ErrorAPI):
+    log.exception(e.detail())
     return e.detail()
 
 
