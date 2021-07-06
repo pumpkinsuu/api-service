@@ -298,6 +298,7 @@ def create_feedback(moodle,
             'status': 500,
             'message': res['errorcode']
         }
+        log.info(res['errorcode'])
         if res['errorcode'].isnumeric():
             err['status'] = int(res['errorcode'])
         if 'message' in res:
